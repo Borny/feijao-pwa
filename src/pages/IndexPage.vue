@@ -155,7 +155,7 @@ export default defineComponent({
 }
 
 .card {
-  width: 100%;
+  width: 320px;
   max-width: 320px;
   padding: 0.6rem;
 

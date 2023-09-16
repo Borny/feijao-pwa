@@ -72,7 +72,6 @@ export default defineComponent({
     }
 
     async function init() {
-      console.log('init');
       showLoading();
 
       try {
@@ -101,7 +100,6 @@ export default defineComponent({
 
     onUpdated(() => {
       showArrowBack.value = router.currentRoute.value.path.includes('/picture')
-      console.log('onUpdated',  router.currentRoute.value.path.includes('/picture'));
     });
 
     function onNavigateBack() {
