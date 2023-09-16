@@ -1,0 +1,141 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&display=swap');
+
+@font-face {
+  font-family: 'KeepOnTruckin';
+  src: url(../../src/assets/font/KEEPT___.TTF);
+}
+
+///////////
+// MIXINS
+///////////
+@mixin screen-xs {
+  @media (min-width: $screen-xs) {
+    @content;
+  }
+}
+
+@mixin screen-sm {
+  @media (min-width: $screen-sm) {
+    @content;
+  }
+}
+
+@mixin screen-md {
+  @media (min-width: $screen-md) {
+    @content;
+  }
+}
+
+@mixin screen-lg {
+  @media (min-width: $screen-lg) {
+    @content;
+  }
+}
+
+///////////
+// COLORS
+///////////
+
+$white: #ffffff;
+$black: #000000;
+
+
+$blueDiane: #264653;
+$jungleGreen: #2a9d8f;
+$robRoy: #e9c46a;
+$sandyBrown: #f4a261;
+$burntSienna: #e76e51;
+
+$jaggedIce: #ceecea;
+$fountainblue: #5dbeba;
+$oracle: #3d827f;
+
+$butterMilk: #fff4b0;
+$schoolbusyellow: #ffde00;
+$corn: #eacd00;
+
+$cod-gray: #191919;
+$dove-gray: #737373;
+
+$wild-sand: #F5F5F5;
+$alto: #D6D6D6;
+$seashell: #f1f1f1;
+$swiss-coffee: #ddd9d9;
+$nepal: #8F99BB;
+$midgray: #64636E;
+
+$aqua-spring: #EDF6FA;
+$biscay: #1E3477;
+
+$light-red: #ffe6e6;
+
+// $primary   : $fountainblue;
+$primary   : $blueDiane;
+$primary-dark   : $oracle;
+
+$secondary : $jungleGreen;
+$accent    : $robRoy;
+
+$dark      : $sandyBrown;
+$dark-page : #121212;
+
+// $positive  : #21BA45;
+$positive  : $secondary;
+$negative  : #C10015;
+$info      : $burntSienna;
+$warning   : #F2C037;
+
+// GREY
+$grey-lighter: $swiss-coffee;
+$grey-light: $nepal;
+$grey-dark: $midgray;
+
+// BLUE
+$blue-light: $aqua-spring;
+$blue-dark: $biscay;
+
+// RED
+$red-light: $light-red;
+
+/////////
+// FONT
+/////////
+$fontPoppins: 'Poppins', 'Roboto', sans-serif;
+$fontOswald: 'Oswald', 'Roboto', sans-serif;
+$fontCaveat: 'Caveat', 'Roboto', sans-serif;
+$fontKeepOnTruckin: 'KeepOnTruckin', 'Roboto', sans-serif;
+
+////////////////
+// FONT SIZE
+////////////////
+
+$font-size-sm: 0.8rem;
+$font-size-xs: 0.6rem;
+$font-size-base: 1rem;
+$font-size-md: 1.2rem;
+$font-size-lg: 1.5rem;
+
+/////////////////
+// SCREEN SIZES
+/////////////////
+
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 992px;
+$screen-lg: 1200px;

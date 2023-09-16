@@ -1,0 +1,90 @@
+// app global css in SCSS form
+@import './base';
+@import './mixins';
+
+///////////////
+// TEXT SIZE
+///////////////
+.font-xs {
+  font-size: $font-size-xs !important;
+}
+
+.font-sm {
+  font-size: $font-size-sm !important;
+}
+
+.font-oswald {
+  font-family: $fontOswald;
+}
+
+.font-caveat {
+  font-family: $fontCaveat;
+}
+
+.font-keep-on-truckin {
+  font-family: $fontKeepOnTruckin;
+}
+
+///////////////
+// TEXT COLOR
+///////////////
+.text-primary {
+  color: $primary;
+}
+
+.text-secondary {
+  color: $secondary;
+}
+
+.text-primary-dark {
+  color: $primary-dark;
+}
+
+.text-grey-lighter {
+  color: $grey-lighter;
+}
+
+.text-info {
+  color: $info;
+}
+
+.text-dark {
+  color: $dark;
+}
+
+.text-accent {
+  color: $accent;
+}
+
+///////////////
+// BACKGROUND COLOR
+///////////////
+.bg-grey-lighter {
+  background: $grey-lighter;
+}
+
+.bg-grey-light {
+  background: $grey-light;
+}
+
+.q-field--labeled .q-field__native {
+  color: $white;
+}
+
+////////////
+// CLASSES
+////////////
+
+.dialog--comment {
+  .q-card{
+
+    background: $primary;
+  }
+}
+
+/////////////
+// OVERRIDE
+/////////////
+.q-btn.disabled{
+  opacity: 1 !important;
+}

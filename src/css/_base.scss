@@ -1,0 +1,101 @@
+@import './quasar.variables.scss';
+
+////////////////////////////////
+// BOX SIZING FOR ALL ELEMENTS
+////////////////////////////////
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+// We're using "em" as font-size/margin/padding unit
+// It is set on the body font-size and varies depending on screen sizes
+html {
+  font-size: 100%;
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  font-size: 0.8em;
+  font-family: $fontPoppins, sans-serif;
+  background: $primary;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar{
+    display: none;
+    width: 0 !important
+  }
+
+  @media (min-width: $screen-xs) {
+    font-size: 0.9em;
+
+    p {
+      font-size: 0.9em;
+    }
+  }
+
+  @media (min-width: $screen-sm) {
+    font-size: 1em;
+
+    p {
+      font-size: 1em;
+    }
+  }
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
+//////////
+// RESET
+//////////
+
+html,
+body,
+div,
+section,
+main,
+aside,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+li,
+a,
+span,
+label,
+button,
+input,
+textarea {
+  margin: 0;
+  padding: 0;
+  font-family: $fontPoppins;
+
+  // Enable text selection
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+// Overrides Chrome autocomplete input style
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  // box-shadow: 0 0 0 30px white inset !important;
+  // -webkit-box-shadow: 0 0 0 30px white inset !important;
+  box-shadow: 0 0 0 30px $primary inset !important;
+  -webkit-box-shadow: 0 0 0 30px $primary inset !important;
+  margin-bottom: 1px;
+  color: $info;
+}
