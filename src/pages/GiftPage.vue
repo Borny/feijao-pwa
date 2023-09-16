@@ -13,7 +13,7 @@
             </q-card-section>
             <q-card-actions class="card__action" align="center">
               <q-btn :color="gift.state === 'free' ? 'accent' : 'info'" text-color="primary"
-                :label="gift.state === 'free' ? 'Je m\'en occupe' : 'Déjà pris...'"
+                :label="gift.state === 'free' ? $t('ILL_TAKE_CARE_OF_IT') : $t('ALREADY_BOOKED')"
                 :disable="gift.state === 'booked' && gift.user_id !== user.id" @click="onOpenGiftDialog(gift)">
                 <q-icon v-if="gift.state === 'booked' && gift.user_id === user.id" right name="edit" />
               </q-btn>
@@ -24,22 +24,22 @@
         <!-- DIALOG -->
         <q-dialog v-model="displayGiftDialog" class="dialog--gift">
           <q-card class="bg-secondary">
-            <q-card-section v-if="selectedGift.state === 'free'" class="column items-center">
-              <p class="q-mt-lg text-accent">Vous avez choisi</p>
-              <p class="q-mt-lg text-accent font-caveat text-h3">{{ selectedGift.title }}</p>
+            <q-card-section v-if="selectedGift?.state === 'free'" class="column items-center">
+              <p class="q-mt-lg text-accent">{{ $t('YOUVE_CHOSEN') }}</p>
+              <p class="q-mt-lg text-accent font-caveat text-h3">{{ selectedGift?.title }}</p>
             </q-card-section>
             <q-card-section v-else class="column items-center">
-              <p class="q-mt-lg text-accent">Vous avez changé d'avis ?</p>
+              <p class="q-mt-lg text-accent">{{ $t('DID_YOU_CHANGE_YOUR_MIND') }}</p>
             </q-card-section>
 
             <!-- FORM -->
             <q-card-section class="row justify-center">
-              <q-btn color="accent" :label="selectedGift.state === 'free' ? 'Je confirme' : 'Annuler ma réservation'"
+              <q-btn color="accent" :label="selectedGift.state === 'free' ? $t('VALIDATE') : $t('CANCEL_BOOKING')"
                 @click="submit" />
             </q-card-section>
 
             <q-card-actions align="center">
-              <q-btn flat size="sm" label="Retour à la liste" color="accent" v-close-popup />
+              <q-btn flat size="sm" :label="$t('BACK_TO_THE_LIST')" color="accent" v-close-popup />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -60,6 +60,7 @@
 <script>
 import { onMounted, ref, defineComponent, computed } from 'vue'
 import { useQuasar } from "quasar";
+import { useI18n } from 'vue-i18n'
 import { useGiftStore } from "../stores/gift/gift";
 import { useAppStore } from "../stores/app/app";
 import { useAuthStore } from "../stores/auth/auth";
@@ -71,6 +72,7 @@ export default defineComponent({
     const quasar = useQuasar();
     const appStore = useAppStore();
     const authStore = useAuthStore();
+    const i18n = useI18n()
     const giftStore = useGiftStore();
     const gifts = ref([])
     const selectedGift = ref(null)
@@ -78,9 +80,6 @@ export default defineComponent({
     const displayGiftDialog = ref(false);
     const displayThanksDialog = ref(false);
     const user = ref(null);
-    // const getDialogLabel = computed(() => {
-    //   return displayCreateGiftBtn.value ? '' : 'Update'
-    // });
 
     function init() {
       appStore.$patch({ appTitle: "Gift" });
@@ -111,7 +110,6 @@ export default defineComponent({
       displayGiftDialog.value = false;
 
       try {
-        console.log(user.value.id);
         selectedGift.value.user_id = selectedGift.value.user_id ? null : user.value.id;
         selectedGift.value.state = selectedGift.value.state === 'free' ? 'booked' : 'free';
         const response = await giftStore.updateGift(selectedGift.value)
@@ -119,9 +117,8 @@ export default defineComponent({
         if (response) {
           quasar.notify({
             type: 'positive',
-            message: `${selectedGift.value.state !== 'free' ? 'Gift booked' : 'Gift unbooked'}`
+            message: `${selectedGift.value.state !== 'free' ? `${i18n.t('GIFT_BOOKED')}` : `${i18n.t('BOOKING_CANCELLED')}`}`
           })
-
           if (selectedGift.value.state !== 'free') {
             displayThanksDialog.value = true;
 
@@ -134,7 +131,7 @@ export default defineComponent({
       } catch (error) {
         quasar.notify({
           type: 'negative',
-          message: 'Failed to book gift !'
+          message: `${i18n.t('FAILED_TO_BOOK_THE_GIFT')}`,
         })
         console.log('failed to create gifts');
       } finally {
@@ -145,11 +142,9 @@ export default defineComponent({
     }
 
     async function onOpenGiftDialog(gift) {
-      console.log('onOpenGiftDialog', gift);
-
       selectedGift.value = gift;
 
-      displayGiftDialog.value = !displayGiftDialog.value;
+      displayGiftDialog.value = true;
     }
 
     return {
@@ -159,7 +154,6 @@ export default defineComponent({
       loadingGifts,
       displayGiftDialog,
       displayThanksDialog,
-      // getDialogLabel,
 
       selectedGift,
       gifts,

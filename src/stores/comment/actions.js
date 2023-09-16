@@ -2,11 +2,7 @@ import { api } from "boot/axios";
 
 export default {
   async getCommentsByPictureId(pictureId) {
-    // console.log('get comments', pictureId);
-
     const response = await api.get(`/comment/${pictureId}`)
-
-    // console.log('get comments', {response});
 
     if (!response) {
       return 'No comments found'
@@ -21,8 +17,6 @@ export default {
 
     const response = await api.get(`/picture/${id}`)
 
-    // console.log({response});
-
     if (!response) {
       return 'No picture found'
     }
@@ -33,7 +27,6 @@ export default {
   },
 
   async createComment(data) {
-    console.log('this.createComment', data)
     const response = await api.post('/comment', data)
 
     if (!response) {
@@ -46,7 +39,6 @@ export default {
   },
 
   async deleteComment(commentId) {
-    console.log('this.delete comment ', commentId)
     const response = await api.delete(`/comment/${commentId}`)
 
     if (!response) {

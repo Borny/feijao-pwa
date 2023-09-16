@@ -4,17 +4,12 @@
     <q-card-section class="col q-py-sm">
       <p :class="user.id === comment.user_id ? 'text-secondary' : 'text-dark'">
         <small>
-          {{ user.id === comment.user_id ? 'You' : comment.name }}
+          {{ user.id === comment.user_id ? $t('YOU') : comment.name }}
         </small>
       </p>
       <p class="q-ml-md" :class="user.id === comment.user_id ? 'text-primary' : 'text-accent'">
         {{ comment.comment }}
       </p>
-      <!-- <p :class="user.id === comment.user_id ? 'text-primary' : 'text-accent'">
-        <small>
-          {{ formatDate }}
-        </small>
-      </p> -->
     </q-card-section>
     <q-card-section class="q-py-sm">
       <q-btn v-if="user.id === comment.user_id" @click="openDeleteCommentDialog = true" flat round color="primary" icon="delete" />
@@ -23,12 +18,12 @@
     <q-dialog v-model="openDeleteCommentDialog" class="dialog--comment">
       <q-card>
         <q-card-section class="row items-center">
-          <p class="q-ml-sm text-info">Do you wish to delete this comment ?</p>
+          <p class="q-ml-sm text-info">{{ $t('CONFIRM_DELETE_COMMENT') }}</p>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Nope" color="info" v-close-popup />
-          <q-btn flat label="Yes I do!" color="info" @click="onDeleteComment" v-close-popup />
+          <q-btn flat :label="$t('NO')" color="info" v-close-popup />
+          <q-btn flat :label="$t('YES')" color="info" @click="onDeleteComment" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -54,7 +49,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const authStore = useAuthStore();
     const user = ref(null)
-    // const formatDate = computed(() => props.comment.updated_at ? dayjs(props.comment.updated_at).format('DD/MM/YYYY HH:mm') : null);
     const formatDate = computed(() => props.comment.updated_at ?
       `${new Date(props.comment.updated_at).getDate()}-${new Date(props.comment.updated_at).getMonth()}-${new Date(props.comment.updated_at).getYear()}`
       : null);
@@ -64,7 +58,6 @@ export default defineComponent({
     }
 
     function onDeleteComment() {
-      console.log('delete comment', props.comment.id)
       emit("deleteComment", props.comment.id);
     }
 

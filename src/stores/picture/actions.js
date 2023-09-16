@@ -5,8 +5,6 @@ export default {
 
     const response = await api.get('/pictures')
 
-    // console.log({response});
-
     if (!response) {
       return 'No pictures found'
     }
@@ -17,11 +15,8 @@ export default {
   },
 
   async getPictureById(id) {
-    // console.log('getPictureById');
 
     const response = await api.get(`/picture/${id}`)
-
-    // console.log({response});
 
     if (!response) {
       return 'No picture found'
@@ -36,8 +31,6 @@ export default {
 
     const response = await api.get(`/picture-comment/${id}`)
 
-    // console.log({response});
-
     if (!response) {
       return 'No picture found'
     }
@@ -50,8 +43,6 @@ export default {
   async getPicture(id) {
 
     const response = await api.get(`/picture/${id}`)
-
-    // console.log({response});
 
     if (!response) {
       return 'No picture found'

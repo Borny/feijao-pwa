@@ -6,11 +6,11 @@
           <q-card class="col-1-md card bg-grey-lighter padding-none">
             <q-card-section class="bg-accent">
               <p class="text-center">
-                Les paris sont ouverts !!!!
+                {{$t('THE_BEST_ARE_OPEN')}}
                 <br>
-                Vous pourrez les changer à tout moment.
+                {{$t('YOU_CAN_CHANGE_THEM_AT_ANY_TIME')}}
                 <br>
-                Et nous, on prépare une petite surprise pour le/la gagnant/e.
+                {{$t('SURPRISE_PREPARATION')}}
               </p>
             </q-card-section>
           </q-card>
@@ -21,8 +21,8 @@
               <q-spinner-tail color="accent" size="2em" />
             </div>
             <div v-if="!bets.length && !loadingBets" class="no-bet">
-              <p>No bets yet...</p>
-              <p>Be the first !</p>
+              <p>{{$t('NO_BETS_YET')}}</p>
+              <p>{{$t('BE_THE_FIRST')}}</p>
             </div>
             <div v-if="bets.length && !loadingBets" class="bet__container">
               <bet-card v-for="(bet, idx) in bets" :key="idx" :bet="bet" :user="user"
@@ -35,7 +35,7 @@
         <q-dialog v-model="displayBetDialog" class="dialog--bet">
           <q-card class="bg-secondary">
             <q-card-section class="row justify-center">
-              <p class="q-ml-sm text-accent">{{ getDialogLabel }} your bet</p>
+              <p class="q-ml-sm text-accent">{{ getDialogLabel }}</p>
             </q-card-section>
 
             <!-- FORM -->
@@ -43,19 +43,19 @@
               <form @submit.prevent="submit">
                 <div class="q-gutter-sm">
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="male" label="Male" />
+                    val="male" :label="$t('MALE')" />
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="female" label="Female" />
+                    val="female" :label="$t('FEMALE')" />
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="other" label="Other" />
+                    val="other" :label="$t('OTHER')" />
                 </div>
-                <q-input v-model="height" rounded standout bg-color="accent" placeholder="Height"
+                <q-input v-model="height" rounded standout bg-color="accent" :placeholder="$t('HEIGHT')"
                   class="input__bet q-my-sm">
                 </q-input>
-                <q-input v-model="weight" rounded standout bg-color="accent" placeholder="Weight"
+                <q-input v-model="weight" rounded standout bg-color="accent" :placeholder="$t('WEIGHT')"
                   class="input__bet q-my-sm">
                 </q-input>
-                <q-input v-model="extra" rounded standout bg-color="accent" placeholder="Extra"
+                <q-input v-model="extra" rounded standout bg-color="accent" :placeholder="$t('EXTRA_OPTIONAL')"
                   class="input__bet q-my-sm">
                 </q-input>
               </form>
@@ -63,11 +63,11 @@
 
             <q-card-actions align="between">
               <div>
-                <q-btn v-if="!displayCreateBetBtn" label="Delete" color="info" @click="deleteBet" />
+                <q-btn v-if="!displayCreateBetBtn" :label="$t('DELETE')" color="info" @click="deleteBet" />
               </div>
               <div>
-                <q-btn flat label="Nope" color="accent" v-close-popup />
-                <q-btn label="Let's roll!" color="accent" @click="submit" :disable="!gender || !height || !weight"
+                <q-btn flat :label="$t('CANCEL')" color="accent" v-close-popup />
+                <q-btn :label="$t('LETS_ROLL')" color="accent" @click="submit" :disable="!gender || !height || !weight"
                   v-close-popup />
               </div>
             </q-card-actions>
@@ -76,7 +76,7 @@
 
         <!-- BUTTON STICKY -->
         <q-page-sticky v-if="displayCreateBetBtn" position="bottom-right" :offset="[20, 20]">
-          <q-btn label="Place a bet" rounded color="accent" @click="onOpenBetDialog({ mode: 'create' })" />
+          <q-btn :label="$t('MAKE_A_BET')" rounded color="accent" @click="onOpenBetDialog({ mode: 'create' })" />
         </q-page-sticky>
       </div>
     </transition>
@@ -86,6 +86,7 @@
 <script>
 import { onMounted, ref, defineComponent, computed } from 'vue'
 import { useQuasar } from "quasar";
+import { useI18n } from 'vue-i18n'
 import { useBetStore } from "../stores/bet/bet";
 import { useAppStore } from "../stores/app/app";
 import { useAuthStore } from "../stores/auth/auth";
@@ -100,6 +101,7 @@ export default defineComponent({
 
   setup() {
     const quasar = useQuasar();
+    const i18n = useI18n()
     const appStore = useAppStore();
     const authStore = useAuthStore();
     const betStore = useBetStore();
@@ -109,7 +111,7 @@ export default defineComponent({
     const displayCreateBetBtn = ref(false);
     const user = ref(null);
     const getDialogLabel = computed(() => {
-      return displayCreateBetBtn.value ? 'Create' : 'Update'
+      return displayCreateBetBtn.value ? `${i18n.t('CREATE_YOUR_BET')}` : `${i18n.t('UPDATE_YOUR_BET')}`
     });
 
     const gender = ref(null)
@@ -150,14 +152,14 @@ export default defineComponent({
         if (response) {
           quasar.notify({
             type: 'positive',
-            message: 'Bet deleted !'
+            message: `${i18n.t('BET_DELETED')}`
           })
         }
       } catch (error) {
         if (response) {
           quasar.notify({
             type: 'negative',
-            message: 'Failed to delete bet...'
+            message: `${i18n.t('FAILED_TO_DELETE_BET')}`
           })
         }
 
@@ -170,7 +172,6 @@ export default defineComponent({
 
     async function submit() {
       loadingBets.value = true;
-      console.log('submit', gender.value, height.value, weight.value, extra.value, betId.value);
       const betData = {
         gender: gender.value,
         height: height.value,
@@ -189,7 +190,7 @@ export default defineComponent({
           if (response) {
             quasar.notify({
               type: 'positive',
-              message: 'Bet added !'
+              message: `${i18n.t('BET_ADDED')}`
             })
           }
         } else {
@@ -198,7 +199,7 @@ export default defineComponent({
           if (response) {
             quasar.notify({
               type: 'positive',
-              message: 'Bet updated !'
+              message: `${i18n.t('BET_UPDATED')}`
             })
           }
         }
@@ -207,7 +208,7 @@ export default defineComponent({
       } catch (error) {
         quasar.notify({
           type: 'negative',
-          message: 'Failed to add bet !'
+          message: `${i18n.t('FAILED_TO_ADD_BET')}`
         })
         console.log('failed to create bets');
       } finally {
@@ -215,8 +216,6 @@ export default defineComponent({
     }
 
     async function onOpenBetDialog(data) {
-      console.log('onOpenBetDialog', data.bet, data.mode);
-
       gender.value = data.bet?.gender || null;
       height.value = data.bet?.height || null;
       weight.value = data.bet?.weight || null;

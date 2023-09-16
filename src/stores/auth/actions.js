@@ -2,12 +2,9 @@ import { api } from "boot/axios";
 
 export default {
   async login(name, birthday) {
-    console.log('login', name, birthday)
     if (!name || !birthday) {
       throw new Error('Name or birthday required')
     }
-    console.log('login', name, birthday)
-
     const response = await api.post('/login', {
       name, birthday
     })
@@ -15,10 +12,6 @@ export default {
     if (!response) {
       return 'No user found'
     }
-    console.log('response', response);
-
-    console.log({ resp: response.data.data });
-
     if ((response.status === 200)) {
       localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('userName', response.data.data.name);

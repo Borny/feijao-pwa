@@ -1,32 +1,23 @@
 <template>
   <div class="row flex-center container bg-primary">
     <transition>
-        <!-- <q-card v-if="displayForm" class="column items-center form-container">
-          <q-card-section class="col column justify-around items-center"> -->
-        <!-- <img class="logo" src="../assets/ct-logo-round.png" alt="ct-logo" /> -->
-        <form v-if="displayForm" class="column items-center form" @submit.prevent="submit">
-          <div class="text-h3 q-ma-xl text-center text-info font-keep-on-truckin">Feijão Mágico</div>
-          <q-input clearable :disable="isLoading" type="text" color="info" label-color="info" v-model="name" label="Name"
-            placeholder="Name" class="q-mb-sm control" :rules="[(val) => !!val || 'Field is required']">
-            <template v-slot:prepend>
-              <q-icon color="info" name="account_circle" />
-            </template>
-          </q-input>
-          <q-input clearable :disable="isLoading" type="password" color="info" label-color="info" placeholder="Birthday"
-            label="Birthday" v-model="birthday" class="q-mb-sm control" :rules="[(val) => !!val || 'Field is required']">
-            <template v-slot:prepend>
-              <q-icon color="info" name="key" />
-            </template>
-          </q-input>
-          <q-btn rounded color="info" text-color="primary" label="Connexion" :loading="isLoading"
-            :disabled="!name || !isBirthdayValid || isLoading" class="q-mt-lg" type="submit" />
-        </form>
-
-        <!-- <transition>
-          <p>dqlmfjdqsmlkfjqsmlkfjsdfm some transition</p>
-        </transition> -->
-        <!-- </q-card-section>
-      </q-card> -->
+      <form v-if="displayForm" class="column items-center form" @submit.prevent="submit">
+        <div class="text-h3 q-ma-xl text-center text-info font-keep-on-truckin">Feijão Mágico</div>
+        <q-input clearable :disable="isLoading" type="text" color="info" label-color="info" v-model="name" :label="$t('NAME')"
+          :placeholder="$t('NAME')" class="q-mb-sm control" :rules="[(val) => !!val || 'Field is required']">
+          <template v-slot:prepend>
+            <q-icon color="info" name="account_circle" />
+          </template>
+        </q-input>
+        <q-input clearable :disable="isLoading" type="password" color="info" label-color="info" :placeholder="$t('PASSWORD')"
+          :label="$t('PASSWORD')" v-model="birthday" class="q-mb-sm control" :rules="[(val) => !!val || 'Field is required']">
+          <template v-slot:prepend>
+            <q-icon color="info" name="key" />
+          </template>
+        </q-input>
+        <q-btn rounded color="info" text-color="primary" :label="$t('SIGN_IN')" :loading=" isLoading "
+          :disabled=" !name || !isBirthdayValid || isLoading " class="q-mt-lg" type="submit" />
+      </form>
     </transition>
   </div>
 </template>
@@ -78,12 +69,8 @@ export default {
             color: "negative",
           });
         }
-        // authStore.$patch({ token: response.data.token });
-
-        console.log('should work', response);
         router.replace('/home');
       } catch (error) {
-        console.error(error);
         $q.notify({
           message: "Please check your name or birthday",
           color: "negative",

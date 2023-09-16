@@ -10,6 +10,7 @@
 
 
 const { configure } = require('quasar/wrappers');
+const path = require('node:path')
 
 const API_DEV = 'http://localhost:7000/api/'
 const API_PROD = 'https://nrw-api.citytaps.net/api/v1'
@@ -32,8 +33,7 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-
-
+      'i18n',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -58,7 +58,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
+        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node16'
       },
 
@@ -73,8 +73,8 @@ module.exports = configure(function (ctx) {
       // analyze: true,
       env: {
         API: ctx.dev
-        ? API_DEV
-        : API_PROD
+          ? API_DEV
+          : API_PROD
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
@@ -89,6 +89,25 @@ module.exports = configure(function (ctx) {
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
+      chainWebpack(chain) {
+        chain
+          .plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
+        chain.module
+          .rule('i18n-resource')
+          .test(/\.(json5?|ya?ml)$/)
+          .include.add(path.resolve(__dirname, './src/i18n'))
+          .end()
+          .type('javascript/auto')
+          .use('i18n-resource')
+          .loader('@intlify/vue-i18n-loader')
+        chain.module
+          .rule('i18n')
+          .resourceQuery(/blockType=i18n/)
+          .type('javascript/auto')
+          .use('i18n')
+          .loader('@intlify/vue-i18n-loader')
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
@@ -111,12 +130,12 @@ module.exports = configure(function (ctx) {
       // components: [],
       // directives: [],
 
-     // Quasar plugins
-     plugins: [
-      'Notify',
-      'Loading',
-      'Dialog'
-    ]
+      // Quasar plugins
+      plugins: [
+        'Notify',
+        'Loading',
+        'Dialog'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
@@ -138,7 +157,7 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
       // ssrPwaHtmlFilename: 'offline.html', // do NOT use index.html as name!
-                                          // will mess up SSR
+      // will mess up SSR
 
       // extendSSRWebserverConf (esbuildConf) {},
       // extendPackageJson (json) {},
@@ -149,7 +168,7 @@ module.exports = configure(function (ctx) {
       // manualPostHydrationTrigger: true,
 
       prodPort: 3000, // The default port that the production server should use
-                      // (gets superseded if process.env.PORT is specified at runtime)
+      // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
         'render' // keep this as last one

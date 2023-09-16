@@ -3,25 +3,28 @@
     <q-header elevated>
       <q-toolbar>
         <q-btn flat dense round :class="showArrowBack ? '' : 'arrow-cursor'" :icon="showArrowBack ? 'arrow_back' : ''"
-          color="info" aria-label="Back" @click="onNavigateBack" :style="!showArrowBack ? 'opacity: 0': ''" />
+          color="info" aria-label="Back" @click="onNavigateBack" :style="!showArrowBack ? 'opacity: 0' : ''" />
 
-        <q-toolbar-title class="text-h4 text-center text-info font-keep-on-truckin">
-          Feijão Mágico
-        </q-toolbar-title>
+        <q-toolbar-title class="text-h4 text-center text-info font-keep-on-truckin">Feijão Mágico</q-toolbar-title>
 
-        <q-btn flat  dense :label="user.nickname ? user.nickname : user.name" color="info">
+        <q-btn flat dense :label="user.nickname ? user.nickname : user.name" color="info">
           <q-icon right name="person" />
           <q-menu anchor="bottom end" self="top right" class="bg-secondary">
-            <q-item class="text-accent text-right q-pr-md">
-              <q-item-section class="q-pr-md">
-                {{ user.name }}
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-btn icon="power_settings_new" flat text-color="dark" @click="logout" label="logout" />
-              </q-item-section>
-            </q-item>
+            <q-list>
+              <q-item>
+                <q-item-section>
+                  <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('en-US')" :label="$t('ENGLISH')" />
+                  <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('fr-FR')" :label="$t('FRENCH')" />
+                  <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('pt-PT')"
+                    :label="$t('PORTUGUESE')" />
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-btn icon="power_settings_new" flat text-color="dark" @click="logout" :label="$t('LOG_OUT')" />
+                </q-item-section>
+              </q-item>
+            </q-list>
           </q-menu>
         </q-btn>
       </q-toolbar>
@@ -46,6 +49,7 @@
 import { defineComponent, ref, onMounted, onUpdated } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from "../stores/auth/auth";
 
 export default defineComponent({
@@ -59,6 +63,9 @@ export default defineComponent({
     const isMainLayoutLoaded = ref(false);
     const user = ref({});
     const showArrowBack = ref(false);
+    const { locale } = useI18n({ useScope: 'global' })
+
+    // locale = 'fr-FR'
 
     function showLoading() {
       quasar.loading.show({
@@ -106,6 +113,10 @@ export default defineComponent({
       router.push('/home');
     }
 
+    function onChangeLanguage(language) {
+      locale.value = language
+    }
+
     function logout() {
       authStore.logout();
       router.replace("/login");
@@ -116,6 +127,8 @@ export default defineComponent({
       leftDrawerOpen,
       isMainLayoutLoaded,
       onNavigateBack,
+      onChangeLanguage,
+
       user,
       logout,
       showArrowBack,

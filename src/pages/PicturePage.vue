@@ -1,5 +1,5 @@
 <template>
-  <q-page class="page bg-primary">
+  <q-page class="page row justify-center items-center bg-primary">
     <div class="row" v-if="isLoading">
       <q-spinner-tail color="accent" size="2em" />
     </div>
@@ -23,8 +23,8 @@
             <q-spinner-tail color="accent" size="2em" />
           </div>
           <div v-if="!comments.length && !loadingComments" class="no-comment">
-            <p>No comments yet...</p>
-            <p>Be the first !</p>
+            <p>{{ $t('NO_COMMENTS_YET') }}</p>
+            <p>{{ $t('BE_THE_FIRST') }}</p>
           </div>
           <div v-if="comments.length && !loadingComments" class="comment__container">
             <comment-card v-for="(comment, idx) in comments" :key="idx" :comment="comment"
@@ -34,7 +34,7 @@
           <!-- SEND COMMENT -->
           <div class="input__container bg-primary row justify-center">
             <q-input @submit="createComment" rounded standout bg-color="accent" v-model.trim="commentToCreate"
-              placeholder="Which title would be best ?" class="input__comment">
+              :placeholder="$t('WHICH_TITLE_WOULD_BE_BEST')" class="input__comment">
               <template v-slot:append>
                 <q-btn @click="createComment" type="button" color="primary" :disabled="!commentToCreate || isLoading"
                   round dense flat icon="send" />
@@ -51,6 +51,7 @@
 import { onMounted, onBeforeUnmount, ref, defineComponent, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { useQuasar } from "quasar";
+import { useI18n } from 'vue-i18n'
 import { usePictureStore } from "../stores/picture/picture";
 import { useAuthStore } from "../stores/auth/auth";
 import { useCommentStore } from "../stores/comment/comment";
@@ -70,6 +71,7 @@ export default defineComponent({
     const authStore = useAuthStore();
     const pictureStore = usePictureStore();
     const commentStore = useCommentStore();
+    const i18n = useI18n()
     const picture = ref(null)
     const route = useRoute();
     const isLoading = ref(false);
@@ -79,10 +81,8 @@ export default defineComponent({
     const displayPage = ref(false);
 
     const formatDate = computed(() => {
-      // if (picture.value) {
       const date = new Date(picture.value.created_at)
       return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric', year: 'numeric', })
-      // }
     });
 
     function init() {
@@ -92,14 +92,11 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      // displayPage.value = true;
-      console.log('mount')
       init();
     });
 
     onBeforeUnmount(async () => {
       displayPage.value = false;
-      console.log('unmount')
     });
 
     async function getPicture() {
@@ -111,7 +108,6 @@ export default defineComponent({
 
         getComments()
       } catch (error) {
-        console.log('failed to get data', error);
       } finally {
         isLoading.value = false;
       }
@@ -132,43 +128,38 @@ export default defineComponent({
 
     async function createComment() {
       try {
-        console.log('createComment user:', authStore.user)
-        const response = await commentStore.createComment({
+        await commentStore.createComment({
           comment: commentToCreate.value,
           pictureId: picture.value.id,
           userId: authStore.user.id,
         })
-        console.log(response.data)
-
         commentToCreate.value = null
 
         getComments()
 
         quasar.notify({
           type: 'positive',
-          message: 'Comment added !'
+          message: `${i18n.t('COMMENT_ADDED')}`,
         })
 
       } catch (error) {
         quasar.notify({
           type: 'negative',
-          message: 'Failed to add comment !'
+          message: `${i18n.t('FAILED_TO_ADD_COMMENT')}`,
         })
-        console.log('failed to create comments');
+        console.log(error, 'failed to create comments');
       }
     }
 
     async function deleteComment(commentId) {
-      console.log('delete comment 02', commentId)
-
       loadingComments.value = true;
       try {
         const response = await commentStore.deleteComment(commentId)
-        console.log('response delete comment', response.data)
 
         quasar.notify({
           type: 'positive',
-          message: 'Comment deleted !'
+          message: `${i18n.t('COMMENT_DELETED')}`,
+
         })
 
         getComments()
@@ -176,7 +167,7 @@ export default defineComponent({
       } catch (error) {
         quasar.notify({
           type: 'negative',
-          message: 'Failed to delete comment !'
+          message: `${i18n.t('FAILED_TO_DELETE_COMMENT')}`,
         })
         console.log('failed to delete comment ');
       } finally {

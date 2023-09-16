@@ -1,5 +1,5 @@
 <template>
-  <q-page class="page">
+  <q-page class="page row justify-center items-center bg-secondary">
     <div class="row" v-if="isLoading">
       <q-spinner-tail color="accent" size="2em" />
     </div>
@@ -9,7 +9,8 @@
           <q-card v-for="(picture, idx) in pictures" :key="idx" :style="{ transform: `rotate(${picture.rotate}deg)` }"
             class="col-1-md q-ma-lg card bg-grey-lighter">
             <router-link :to="`/picture/${picture.id}`">
-              <q-card-section :style="{ backgroundImage: `url('https://feijao-app.s3.eu-central-1.amazonaws.com/${picture.url}')` }"
+              <q-card-section
+                :style="{ backgroundImage: `url('https://feijao-app.s3.eu-central-1.amazonaws.com/${picture.url}')` }"
                 class="card__image">
               </q-card-section>
               <!-- <img :src="`./src/assets/pictures/${picture.url}`"> -->
@@ -32,6 +33,8 @@ import { usePictureStore } from "../stores/picture/picture";
 import { useAppStore } from "../stores/app/app";
 import { useQuasar } from 'quasar'
 
+import { useI18n } from 'vue-i18n'
+
 export default defineComponent({
   name: 'IndexPage',
 
@@ -44,7 +47,6 @@ export default defineComponent({
     const url = ref('background: url(\'../assets/pictures/IMG_20230824_193519_Bokeh.jpg\')')
 
     function getRotation() {
-      console.log('get rotation')
       return rotate()
     }
 
@@ -59,7 +61,6 @@ export default defineComponent({
     });
 
     function getPicture(url) {
-      console.log(url)
       return `background: url('../assets/pictures/${url}')`
     }
 
@@ -106,10 +107,11 @@ export default defineComponent({
     return {
       getRotation,
       getPicture,
+
       pictures,
       getData,
       isLoading,
-      url
+      url,
     }
   }
 })
@@ -145,13 +147,7 @@ export default defineComponent({
 }
 
 .page {
-  background: $secondary;
-  // overflow: hidden;
   padding: 2rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .card {
