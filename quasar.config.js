@@ -69,7 +69,7 @@ module.exports = configure(function (ctx) {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
+      publicPath: '/feijao-pwa/',
       // analyze: true,
       env: {
         API: ctx.dev
