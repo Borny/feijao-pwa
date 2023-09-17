@@ -10,13 +10,13 @@
           </template>
         </q-input>
         <q-input clearable :disable="isLoading" type="password" color="info" label-color="info" :placeholder="$t('PASSWORD')"
-          :label="$t('PASSWORD')" v-model="birthday" class="q-mb-sm control" :rules="[(val) => !!val || 'Field is required']">
+          :label="$t('PASSWORD')" v-model="password" class="q-mb-sm control" :rules="[(val) => !!val || 'Field is required']">
           <template v-slot:prepend>
             <q-icon color="info" name="key" />
           </template>
         </q-input>
         <q-btn rounded color="info" text-color="primary" :label="$t('SIGN_IN')" :loading=" isLoading "
-          :disabled=" !name || !isBirthdayValid || isLoading " class="q-mt-lg" type="submit" />
+          :disabled=" !name || !isPasswordValid || isLoading " class="q-mt-lg" type="submit" />
       </form>
     </transition>
   </div>
@@ -39,12 +39,12 @@ export default {
     const authStore = useAuthStore();
     const router = useRouter();
     const isAuth = computed(() => authStore.isAuth);
-    const isBirthdayValid = computed(() => birthday.value && birthday.value.length >= 4);
-    const birthdayTooShort = computed(() => birthday.value && birthday.value.length < 6);
+    const isPasswordValid = computed(() => password.value && password.value.length >= 4);
+    const passwordTooShort = computed(() => password.value && password.value.length < 6);
 
     const loginSuccess = ref("");
     const name = ref("");
-    const birthday = ref(null);
+    const password = ref(null);
     const isLoading = ref(false);
     const displayForm = ref(false);
 
@@ -61,18 +61,18 @@ export default {
       isLoading.value = true;
 
       try {
-        const response = await authStore.login(name.value, birthday.value);
+        const response = await authStore.login(name.value, password.value);
 
         if (!response) {
           $q.notify({
-            message: "Please check your name or birthday",
+            message: "Please check your name or password",
             color: "negative",
           });
         }
         router.replace('/home');
       } catch (error) {
         $q.notify({
-          message: "Please check your name or birthday",
+          message: "Please check your name or password",
           color: "negative",
         });
       } finally {
@@ -87,9 +87,9 @@ export default {
       submit,
       displayForm,
       name,
-      birthday,
-      isBirthdayValid,
-      birthdayTooShort,
+      password,
+      isPasswordValid,
+      passwordTooShort,
       isLoading,
     };
   },

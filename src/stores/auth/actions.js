@@ -1,12 +1,12 @@
 import { api } from "boot/axios";
 
 export default {
-  async login(name, birthday) {
-    if (!name || !birthday) {
-      throw new Error('Name or birthday required')
+  async login(name, password) {
+    if (!name || !password) {
+      throw new Error('Name or password required')
     }
     const response = await api.post('/login', {
-      name, birthday
+      name, password
     })
 
     if (!response) {
