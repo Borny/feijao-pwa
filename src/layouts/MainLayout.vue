@@ -124,7 +124,6 @@ export default defineComponent({
 
       try {
         user.value = authStore.getUserInfo;
-        console.log(user.value.nickname)
         nickname.value = user.value.nickname;
 
         if (!user.value) {
