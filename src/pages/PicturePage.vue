@@ -279,14 +279,13 @@ export default defineComponent({
     width: 100%;
     height: 100%;
     max-width: 500px;
-    padding: 0 1rem;
+    padding: 1rem 1rem 5rem;;
     color: $info;
   }
 
   position: relative;
 
   @include screen-sm {
-    // overflow-y: hidden;
     height: 80vh;
     width: 50%;
     max-width: 500px;

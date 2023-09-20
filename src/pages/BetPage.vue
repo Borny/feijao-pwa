@@ -17,10 +17,10 @@
           <!-- BETS -->
           <div class="card--bet no-wrap column">
             <!-- LOADER -->
-            <div v-if="loadingBets" class="no-bet">
+            <div v-if="loadingBets" class="no-bet q-mt-lg">
               <q-spinner-tail color="accent" size="2em" />
             </div>
-            <div v-if="!bets.length && !loadingBets" class="no-bet">
+            <div v-if="!bets.length && !loadingBets" class="no-bet q-mt-lg">
               <p>{{$t('NO_BETS_YET')}}</p>
               <p>{{$t('BE_THE_FIRST')}}</p>
             </div>
