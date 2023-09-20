@@ -15,12 +15,14 @@ export default {
     if ((response.status === 200)) {
       localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('userName', response.data.data.name);
+      localStorage.setItem('nickname', response.data.data.nickname);
       localStorage.setItem('userId', response.data.data.id);
 
       this.$patch({ token: response.data.data.token });
       this.$patch({
         user: {
           name: response.data.data.name,
+          nickname: response.data.data.nickname,
           id: response.data.data.id,
         },
       });
@@ -59,6 +61,7 @@ export default {
       this.$patch({
         user: {
           name: localStorage.getItem('userName'),
+          nickname: localStorage.getItem('nickname'),
           id: +localStorage.getItem('userId')
         },
       });
@@ -70,6 +73,7 @@ export default {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
+    localStorage.removeItem('nickname');
     localStorage.removeItem('userId');
 
     this.$patch({

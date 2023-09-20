@@ -1,5 +1,6 @@
 const pt = {
   NAME: "Nome",
+  NICKNAME: "Apelido",
   PASSWORD: "Senha",
   SIGN_IN: "Entrar",
   LOG_OUT: "Sair",

@@ -7,9 +7,9 @@
 
         <q-toolbar-title class="text-h4 text-center text-info font-keep-on-truckin">Feijão Mágico</q-toolbar-title>
 
-        <q-btn flat dense :label="user.nickname ? user.nickname : user.name" color="info">
+        <q-btn flat dense :label="getName" color="info">
           <q-icon right name="person" />
-          <q-menu anchor="bottom end" self="top right" class="bg-secondary">
+          <q-menu anchor="bottom end" self="top right" class="bg-secondary" v-model="showMenu">
             <q-list>
               <q-item>
                 <q-item-section>
@@ -19,6 +19,11 @@
                     :label="$t('PORTUGUESE')" />
                 </q-item-section>
               </q-item>
+              <!-- <q-item>
+                <q-item-section>
+                  <q-btn icon="settings" flat text-color="dark" @click="onOpenSettings" :label="$t('SETTINGS')" />
+                </q-item-section>
+              </q-item> -->
               <q-item>
                 <q-item-section>
                   <q-btn icon="power_settings_new" flat text-color="dark" @click="logout" :label="$t('LOG_OUT')" />
@@ -39,14 +44,44 @@
       <q-tabs align="justify" class="tab-router bg-primary text-info">
         <q-route-tab icon="photo_camera" to="/home" exact />
         <q-route-tab icon="star" to="/bet" exact />
-        <q-route-tab icon="assignment" to="/gift" exact />
+        <!-- <q-route-tab icon="assignment" to="/gift" exact /> -->
       </q-tabs>
     </q-footer>
+
+    <!-- <q-dialog v-model="displaySettings" class="dialog--settings">
+      <q-card class="bg-secondary">
+        <q-card-section class="row justify-center">
+          <p class="q-ml-sm text-accent">{{ $t('SETTINGS') }}</p>
+        </q-card-section>
+        <q-card-section class="row items-center">
+          <form @submit.prevent="onUpdateSettings">
+            <p class="text-body">{{ $t('UPDATE_NICKNAME') }}</p>
+            <q-input v-model="nickname" type="text" rounded standout bg-color="accent" :placeholder="$t('NICKNAME')"
+              class="input__settings q-my-sm">
+            </q-input>
+
+            <p class="text-body">{{ $t('UPDATE_PASSWORD') }}</p>
+            <q-input v-model="newPassword" type="password" rounded standout bg-color="accent" :placeholder="$t('NEW_PASSWORD')"
+              class="input__settings q-my-sm">
+            </q-input>
+            <q-input v-model="confirmedPassword" rounded standout bg-color="accent" :placeholder="$t('CONFIRMED_PASSWORD')"
+              class="input__settings q-my-sm">
+            </q-input>
+          </form>
+        </q-card-section>
+
+        <q-card-actions align="around">
+          <q-btn :label="$t('CANCEL')" color="accent" v-close-popup />
+          <q-btn :label="$t('UPDATE')" color="accent" @click="onUpdateSettings" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog> -->
+
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, onUpdated } from "vue";
+import { defineComponent, ref, onMounted, onUpdated, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useI18n } from 'vue-i18n'
@@ -63,9 +98,15 @@ export default defineComponent({
     const isMainLayoutLoaded = ref(false);
     const user = ref({});
     const showArrowBack = ref(false);
+    const showMenu = ref(false);
+    const displaySettings = ref(false);
+    const nickname = ref('');
+    const newPassword = ref('');
+    const confirmedPassword = ref('');
+
     const { locale } = useI18n({ useScope: 'global' })
 
-    // locale = 'fr-FR'
+    const getName = computed(() => user.value.nickname ? user.value.nickname : user.value.name)
 
     function showLoading() {
       quasar.loading.show({
@@ -83,6 +124,8 @@ export default defineComponent({
 
       try {
         user.value = authStore.getUserInfo;
+        console.log(user.value.nickname)
+        nickname.value = user.value.nickname;
 
         if (!user.value) {
           quasar.notify({
@@ -114,12 +157,31 @@ export default defineComponent({
     }
 
     function onChangeLanguage(language) {
+      showMenu.value = false
       locale.value = language
     }
 
     function logout() {
+      showMenu.value = false
       authStore.logout();
       router.replace("/login");
+    }
+
+    function onOpenSettings() {
+      showMenu.value = false
+      displaySettings.value = true
+    }
+
+    function onUpdateSettings() {
+      showLoading();
+
+      try {
+
+      } catch (error) {
+
+      } finally {
+        hideLoading();
+      }
     }
 
     return {
@@ -128,10 +190,19 @@ export default defineComponent({
       isMainLayoutLoaded,
       onNavigateBack,
       onChangeLanguage,
+      onOpenSettings,
+      onUpdateSettings,
+      logout,
+
+      getName,
 
       user,
-      logout,
+      nickname,
+      newPassword,
+      confirmedPassword,
       showArrowBack,
+      showMenu,
+      displaySettings,
     };
   }
 })

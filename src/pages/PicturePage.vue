@@ -1,6 +1,6 @@
 <template>
-  <q-page class="page row justify-center items-center bg-primary">
-    <div class="row" v-if="isLoading">
+  <q-page class="page  bg-primary">
+    <div class="row justify-center" v-if="isLoading">
       <q-spinner-tail color="accent" size="2em" />
     </div>
     <transition>
@@ -243,17 +243,6 @@ export default defineComponent({
     max-width: 500px;
   }
 
-  // &:after {
-  //   content: '';
-  //   position: absolute;
-  //   display: block;
-  //   top: 0;
-  //   left: 0;
-  //   width: 100%;
-  //   height: 100%;
-  //   background: $info;
-  // }
-
   .image {
     width: 100%;
     max-width: 100%;
@@ -280,8 +269,6 @@ export default defineComponent({
     padding: 0.5rem;
   }
 }
-
-
 
 .card--comment {
   .no-comment {
@@ -310,15 +297,10 @@ export default defineComponent({
     height: 100%;
     min-height: 100%;
     overflow-y: visible;
-    // max-width: 500px;
-    // padding: 0 0 5rem;
     padding: 0 0 5rem;
 
     @include screen-sm {
       overflow-y: auto;
-      // padding: 0 1rem 5rem 0;
-      /* overflow-x: hidden; */
-      // width: calc(100% + 40px);
     }
   }
 

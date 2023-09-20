@@ -1,5 +1,6 @@
 const fr = {
   NAME: "Nom",
+  NICKNAME: "Surnom",
   PASSWORD: "Mot de passe",
   SIGN_IN: "Connexion",
   LOG_OUT: "Déconnexion",
