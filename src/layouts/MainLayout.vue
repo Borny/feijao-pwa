@@ -106,7 +106,7 @@ export default defineComponent({
 
     const { locale } = useI18n({ useScope: 'global' })
 
-    const getName = computed(() => user.value.nickname ? user.value.nickname : user.value.name)
+    const getName = computed(() => user.value.nickname && user.value.nickname !== 'null'  ? user.value.nickname : user.value.name)
 
     function showLoading() {
       quasar.loading.show({
