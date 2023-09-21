@@ -43,19 +43,19 @@
               <form @submit.prevent="submit">
                 <div class="q-gutter-sm">
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="male" :label="$t('MALE')" />
+                    val="male" :label="$t('MALE')" class="radio--input"/>
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="female" :label="$t('FEMALE')" />
+                    val="female" :label="$t('FEMALE')" class="radio--input"/>
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="other" :label="$t('OTHER')" />
+                    val="other" :label="$t('OTHER')" class="radio--input"/>
                 </div>
-                <q-input v-model="height" rounded standout bg-color="accent" :placeholder="$t('HEIGHT')"
+                <q-input v-model="height" standout bg-color="accent" :placeholder="$t('HEIGHT')"
                   class="input__bet q-my-sm">
                 </q-input>
-                <q-input v-model="weight" rounded standout bg-color="accent" :placeholder="$t('WEIGHT')"
+                <q-input v-model="weight" standout bg-color="accent" :placeholder="$t('WEIGHT')"
                   class="input__bet q-my-sm">
                 </q-input>
-                <q-input v-model="extra" rounded standout bg-color="accent" :placeholder="$t('EXTRA_OPTIONAL')"
+                <q-input v-model="extra" standout bg-color="accent" :placeholder="$t('EXTRA_OPTIONAL')"
                   class="input__bet q-my-sm">
                 </q-input>
               </form>
@@ -335,5 +335,9 @@ export default defineComponent({
       width: 100%;
     }
   }
+}
+
+.radio--input{
+  color: $primary;
 }
 </style>

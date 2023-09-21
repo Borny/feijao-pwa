@@ -13,11 +13,12 @@
             <q-list>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="text-right text-capitalize text-primary">{{ getName }}</q-item-label>
+                  <q-item-label
+                    class="text-right text-capitalize text-primary">{{ user.name }}{{ getName }}</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-expansion-item dense expand-separator icon="language" :label="$t('LANGUAGE')"
-                header-class="text-accent" expand-icon-class="text-accent">
+              <q-expansion-item dense expand-separator icon="language" :label="$t('LANGUAGE')" header-class="text-accent"
+                expand-icon-class="text-accent">
                 <q-list>
                   <q-item class="justify-end q-py-none" style="min-height: 30px;">
                     <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('en-US')"
@@ -32,11 +33,12 @@
                   </q-item>
                 </q-list>
               </q-expansion-item>
-              <!-- <q-item>
+              <q-item>
                 <q-item-section>
-                  <q-btn icon="settings" flat text-color="dark" @click="onOpenSettings" :label="$t('SETTINGS')" />
+                  <q-btn size="sm" icon="settings" flat text-color="accent" @click="onOpenSettings"
+                    :label="$t('SETTINGS')" />
                 </q-item-section>
-              </q-item> -->
+              </q-item>
               <q-item>
                 <q-item-section>
                   <q-btn size="sm" icon="power_settings_new" flat text-color="dark" @click="logout"
@@ -62,34 +64,35 @@
       </q-tabs>
     </q-footer>
 
-    <!-- <q-dialog v-model="displaySettings" class="dialog--settings">
+    <q-dialog v-model="displaySettings" class="dialog--settings">
       <q-card class="bg-secondary">
         <q-card-section class="row justify-center">
           <p class="q-ml-sm text-accent">{{ $t('SETTINGS') }}</p>
         </q-card-section>
         <q-card-section class="row items-center">
           <form @submit.prevent="onUpdateSettings">
-            <p class="text-body">{{ $t('UPDATE_NICKNAME') }}</p>
-            <q-input v-model="nickname" type="text" rounded standout bg-color="accent" :placeholder="$t('NICKNAME')"
+            <p class="text-body text-center text-primary">{{ $t('UPDATE_NICKNAME') }}</p>
+            <q-input v-model="nickname" type="text" standout bg-color="accent" :placeholder="$t('NICKNAME')"
               class="input__settings q-my-sm">
             </q-input>
 
-            <p class="text-body">{{ $t('UPDATE_PASSWORD') }}</p>
-            <q-input v-model="newPassword" type="password" rounded standout bg-color="accent" :placeholder="$t('NEW_PASSWORD')"
+            <p class="text-body text-center text-primary q-mt-lg">{{ $t('UPDATE_PASSWORD') }}</p>
+            <q-input v-model="newPassword" type="password" standout bg-color="accent" :placeholder="$t('NEW_PASSWORD')"
               class="input__settings q-my-sm">
             </q-input>
-            <q-input v-model="confirmedPassword" rounded standout bg-color="accent" :placeholder="$t('CONFIRMED_PASSWORD')"
-              class="input__settings q-my-sm">
+            <q-input v-model="confirmedPassword" type="password" standout bg-color="accent"
+              :placeholder="$t('CONFIRMED_PASSWORD')" class="input__settings q-my-sm">
             </q-input>
           </form>
         </q-card-section>
 
         <q-card-actions align="around">
-          <q-btn :label="$t('CANCEL')" color="accent" v-close-popup />
-          <q-btn :label="$t('UPDATE')" color="accent" @click="onUpdateSettings" v-close-popup />
+          <q-btn :label="$t('CANCEL')" color="info" v-close-popup />
+          <q-btn :label="$t('UPDATE')" color="accent" @click="onUpdateSettings" :disabled="!isUpdateValidated"
+            v-close-popup />
         </q-card-actions>
       </q-card>
-    </q-dialog> -->
+    </q-dialog>
 
   </q-layout>
 </template>
@@ -107,6 +110,7 @@ export default defineComponent({
   setup() {
     const quasar = useQuasar();
     const router = useRouter();
+    const i18n = useI18n()
     const authStore = useAuthStore();
     const leftDrawerOpen = false
     const isMainLayoutLoaded = ref(false);
@@ -117,10 +121,15 @@ export default defineComponent({
     const nickname = ref('');
     const newPassword = ref('');
     const confirmedPassword = ref('');
+    const isUpdateValidated = computed(() => {
+      return (newPassword.value.length && newPassword.value.length >= 4)
+        && newPassword.value === confirmedPassword.value
+        || (!newPassword.value.length && !confirmedPassword.value.length)
+    });
 
     const { locale } = useI18n({ useScope: 'global' })
 
-    const getName = computed(() => user.value.nickname && user.value.nickname !== 'null' ? user.value.nickname : user.value.name)
+    const getName = computed(() => user.value.nickname ? ` - ${user.value.nickname}` : '')
 
     function showLoading() {
       quasar.loading.show({
@@ -138,7 +147,7 @@ export default defineComponent({
 
       try {
         user.value = authStore.getUserInfo;
-        nickname.value = user.value.nickname;
+        nickname.value = user.value.nickname || '';
 
         if (!user.value) {
           quasar.notify({
@@ -185,13 +194,36 @@ export default defineComponent({
       displaySettings.value = true
     }
 
-    function onUpdateSettings() {
+    async function onUpdateSettings() {
       showLoading();
 
+      if (newPassword.value !== confirmedPassword.value) {
+        quasar.notify({
+          type: "warning",
+          timeout: 2000,
+          message: `Passwords don't match`,
+          color: "warning",
+        });
+        return
+      }
+
       try {
+        const response = await authStore.updateUser(nickname.value, newPassword.value, user.value.id)
+
+        quasar.notify({
+          type: "positive",
+          timeout: 2000,
+          message: `${i18n.t('UPDATE_SUCCESSFUL')}`,
+          color: "positive",
+        });
 
       } catch (error) {
-
+        quasar.notify({
+          type: "warning",
+          timeout: 2000,
+          message: `${i18n.t('UPDATE_FAILED')}`,
+          color: "warning",
+        });
       } finally {
         hideLoading();
       }
@@ -216,6 +248,7 @@ export default defineComponent({
       showArrowBack,
       showMenu,
       displaySettings,
+      isUpdateValidated
     };
   }
 })

@@ -2,7 +2,7 @@
   <q-card v-if="comment && user" class="comment row items-center q-my-sm"
     :class="user.id === comment.user_id ? 'bg-dark' : 'bg-secondary'">
     <q-card-section class="col q-py-sm">
-      <p :class="user.id === comment.user_id ? 'text-secondary' : 'text-dark'">
+      <p :class="user.id === comment.user_id ? 'text-secondary' : 'text-primary'" class="text-capitalize">
         <small>
           {{ user.id === comment.user_id ? $t('YOU') : comment.name }}
         </small>

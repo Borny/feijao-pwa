@@ -30,6 +30,8 @@ const en = {
   MAKE_A_BET: "Make a bet",
   CREATE: "Create",
   UPDATE: "Update",
+  UPDATE_SUCCESSFUL: "Update successful",
+  UPDATE_FAILED: "Update failed",
   CREATE_YOUR_BET: "Create your bet",
   UPDATE_YOUR_BET: "Update your bet",
   NO_COMMENTS_YET: "No comments yet",

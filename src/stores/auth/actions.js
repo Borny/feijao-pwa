@@ -15,8 +15,9 @@ export default {
     if ((response.status === 200)) {
       localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('userName', response.data.data.name);
-      localStorage.setItem('nickname', response.data.data.nickname);
       localStorage.setItem('userId', response.data.data.id);
+
+      if (response.data.data.nickname) { localStorage.setItem('nickname', response.data.data.nickname) }
 
       this.$patch({ token: response.data.data.token });
       this.$patch({
@@ -29,6 +30,26 @@ export default {
 
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.token}`
 
+      return response.data;
+    }
+  },
+
+  async updateUser(nickname, newPassword, userId) {
+    if (!userId) {
+      throw new Error('User id required')
+    }
+
+    const response = await api.patch(`/user/${userId}`, {
+      nickname, newPassword
+    })
+
+    if ((response.status === 200)) {
+      if (nickname) { localStorage.setItem('nickname', nickname) }
+      this.$patch({
+        user: {
+          nickname,
+        },
+      });
       return response.data;
     }
   },
