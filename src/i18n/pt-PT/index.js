@@ -4,6 +4,7 @@ const pt = {
   PASSWORD: "Senha",
   SIGN_IN: "Entrar",
   LOG_OUT: "Sair",
+  LANGUAGE: "Linguagem",
   FRENCH: "Francês",
   ENGLISH: "Inglês",
   PORTUGUESE: "Português",

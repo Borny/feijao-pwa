@@ -7,18 +7,31 @@
 
         <q-toolbar-title class="text-h4 text-center text-info font-keep-on-truckin">Feijão Mágico</q-toolbar-title>
 
-        <q-btn flat dense :label="getName" color="info">
-          <q-icon right name="person" />
+        <q-btn flat dense color="info">
+          <q-icon name="person" />
           <q-menu anchor="bottom end" self="top right" class="bg-secondary" v-model="showMenu">
             <q-list>
               <q-item>
                 <q-item-section>
-                  <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('en-US')" :label="$t('ENGLISH')" />
-                  <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('fr-FR')" :label="$t('FRENCH')" />
-                  <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('pt-PT')"
-                    :label="$t('PORTUGUESE')" />
+                  <q-item-label class="text-right text-capitalize text-primary">{{ getName }}</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-expansion-item dense expand-separator icon="language" :label="$t('LANGUAGE')"
+                header-class="text-accent" expand-icon-class="text-accent">
+                <q-list>
+                  <q-item class="justify-end q-py-none" style="min-height: 30px;">
+                    <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('en-US')"
+                      :label="$t('ENGLISH')" />
+                  </q-item>
+                  <q-item class="justify-end q-py-none" style="min-height: 30px;">
+                    <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('fr-FR')" :label="$t('FRENCH')" />
+                  </q-item>
+                  <q-item class="justify-end q-py-none" style="min-height: 30px;">
+                    <q-btn size="sm" flat dense color="accent" @click="onChangeLanguage('pt-PT')"
+                      :label="$t('PORTUGUESE')" />
+                  </q-item>
+                </q-list>
+              </q-expansion-item>
               <!-- <q-item>
                 <q-item-section>
                   <q-btn icon="settings" flat text-color="dark" @click="onOpenSettings" :label="$t('SETTINGS')" />
@@ -26,7 +39,8 @@
               </q-item> -->
               <q-item>
                 <q-item-section>
-                  <q-btn icon="power_settings_new" flat text-color="dark" @click="logout" :label="$t('LOG_OUT')" />
+                  <q-btn size="sm" icon="power_settings_new" flat text-color="dark" @click="logout"
+                    :label="$t('LOG_OUT')" />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -106,7 +120,7 @@ export default defineComponent({
 
     const { locale } = useI18n({ useScope: 'global' })
 
-    const getName = computed(() => user.value.nickname && user.value.nickname !== 'null'  ? user.value.nickname : user.value.name)
+    const getName = computed(() => user.value.nickname && user.value.nickname !== 'null' ? user.value.nickname : user.value.name)
 
     function showLoading() {
       quasar.loading.show({

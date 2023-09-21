@@ -4,6 +4,7 @@ const fr = {
   PASSWORD: "Mot de passe",
   SIGN_IN: "Connexion",
   LOG_OUT: "Déconnexion",
+  LANGUAGE: "Langue",
   FRENCH: "Français",
   ENGLISH: "Anglais",
   PORTUGUESE: "Portugais",

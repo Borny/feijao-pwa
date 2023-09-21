@@ -8,6 +8,7 @@ const en = {
   CONFIRMED_PASSWORD: "Confirm your password",
   SIGN_IN: "Sign In",
   LOG_OUT: "Log Out",
+  LANGUAGE: "Language",
   FRENCH: "French",
   ENGLISH: "English",
   PORTUGUESE: "Portuguese",
