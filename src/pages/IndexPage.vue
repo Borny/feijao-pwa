@@ -19,6 +19,9 @@
                   {{ picture.title }}
                 </div>
               </q-card-section>
+              <q-card-actions align="right">
+                <q-btn flat dense color="primary" icon="comment" :label="picture.comment_count" />
+              </q-card-actions>
             </router-link>
           </q-card>
         </div>
@@ -85,13 +88,12 @@ export default defineComponent({
             timeout: 2500,
           })
         }
-        pictures.value = response.data
+        pictures.value = response
         pictures.value.forEach(picture => {
           picture.rotate = rotate()
         });
 
       } catch (error) {
-        console.log('failed to get data', error);
         quasar.notify({
           message: 'Failed to get data',
           color: 'negative',
