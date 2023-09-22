@@ -20,7 +20,7 @@
                 </div>
               </q-card-section>
               <q-card-actions align="right">
-                <q-btn flat dense color="primary" icon="comment" :label="picture.comment_count" />
+                <q-btn size="sm" flat dense color="primary" icon="comment" :label="picture.comment_count" />
               </q-card-actions>
             </router-link>
           </q-card>
