@@ -127,6 +127,8 @@ export default defineComponent({
     }
 
     async function createComment() {
+
+      console.log(commentToCreate.value, 'comment to create');
       try {
         await commentStore.createComment({
           comment: commentToCreate.value,

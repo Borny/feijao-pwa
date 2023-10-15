@@ -13,6 +13,7 @@ const pt = {
   ENGLISH: "Inglês",
   PORTUGUESE: "Português",
   SETTINGS: "Configurações",
+  INSTALL_APP: "Instalar o aplicativo",
   ADMIN: "Admin",
   WHICH_TITLE_WOULD_BE_BEST: "Qual título seria o melhor?",
   COMMENT_ADDED: "Comentário adicionado",

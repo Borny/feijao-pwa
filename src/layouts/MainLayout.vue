@@ -39,6 +39,11 @@
                     :label="$t('SETTINGS')" />
                 </q-item-section>
               </q-item>
+              <q-item v-if="displayInstallApp">
+                <q-item-section>
+                  <q-btn size="sm" icon="install_mobile" flat text-color="accent" @click="onInstallApp" :label="$t('INSTALL_APP')" />
+                </q-item-section>
+              </q-item>
               <q-item>
                 <q-item-section>
                   <q-btn size="sm" icon="power_settings_new" flat text-color="dark" @click="logout"
@@ -103,6 +108,7 @@ import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from "../stores/auth/auth";
+import useHomeStore from "../stores/home/home";
 
 export default defineComponent({
   name: 'MainLayout',
@@ -112,7 +118,9 @@ export default defineComponent({
     const router = useRouter();
     const i18n = useI18n()
     const authStore = useAuthStore();
+    const homeStore = useHomeStore();
     const leftDrawerOpen = false
+    const displayInstallApp = ref(homeStore.displayInstallApp)
     const isMainLayoutLoaded = ref(false);
     const user = ref({});
     const showArrowBack = ref(false);
@@ -229,6 +237,14 @@ export default defineComponent({
       }
     }
 
+    function onInstallApp() {
+      homeStore.deferredPrompt.prompt()
+    }
+
+    homeStore.$subscribe((mutation, state) => {
+      displayInstallApp.value = state.displayInstallApp
+    })
+
     return {
       authStore,
       leftDrawerOpen,
@@ -237,6 +253,7 @@ export default defineComponent({
       onChangeLanguage,
       onOpenSettings,
       onUpdateSettings,
+      onInstallApp,
       logout,
 
       getName,
@@ -248,7 +265,8 @@ export default defineComponent({
       showArrowBack,
       showMenu,
       displaySettings,
-      isUpdateValidated
+      isUpdateValidated,
+      displayInstallApp,
     };
   }
 })

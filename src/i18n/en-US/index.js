@@ -13,6 +13,7 @@ const en = {
   ENGLISH: "English",
   PORTUGUESE: "Portuguese",
   SETTINGS: "Settings",
+  INSTALL_APP: "Install the app",
   ADMIN: "Admin",
   WHICH_TITLE_WOULD_BE_BEST: "Which title would be best ?",
   COMMENT_ADDED: "Comment added",

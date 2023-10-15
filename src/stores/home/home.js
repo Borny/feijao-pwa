@@ -2,10 +2,14 @@ import { defineStore } from 'pinia'
 import getters from './getters'
 import actions from './actions'
 
-export const useHomeStore = defineStore('home', {
+const useHomeStore = defineStore('home', {
   state: () => ({
-    info: null
+    info: null,
+    deferredPrompt: null,
+    displayInstallApp: null,
   }),
   getters,
   actions
 });
+
+export default useHomeStore

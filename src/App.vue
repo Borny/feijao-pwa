@@ -7,11 +7,13 @@ import { defineComponent } from 'vue'
 import { useAuthStore } from './stores/auth/auth';
 import { api } from "boot/axios";
 import router from './router';
+import useHomeStore from './stores/home/home'
 
 export default defineComponent({
   name: 'App',
   setup() {
     const authStore = useAuthStore()
+    const homeStore = useHomeStore()
 
     api.interceptors.response.use((response) => response, (error) => {
       console.log(error)
@@ -32,6 +34,21 @@ export default defineComponent({
     });
 
     authStore.autoLogin();
+
+    // PWA related
+    window.addEventListener('appinstalled', () => {
+      homeStore.setInstallAppDisplay(false)
+      homeStore.setDeferredPrompt(null)
+    })
+
+    // PWA related
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault()
+      homeStore.setInstallAppDisplay(true)
+      // Stash the event so it can be triggered later.
+      homeStore.setDeferredPrompt(e)
+    })
   }
 })
 </script>

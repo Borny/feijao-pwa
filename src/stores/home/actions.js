@@ -26,4 +26,13 @@ export default {
       return response.data;
     }
   },
+
+  // PWA
+  setDeferredPrompt(value) {
+    this.$patch({ deferredPrompt: value })
+  },
+
+  setInstallAppDisplay(value) {
+    this.$patch({ displayInstallApp: value })
+  },
 }
