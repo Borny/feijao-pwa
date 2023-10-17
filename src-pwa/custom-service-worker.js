@@ -53,12 +53,12 @@ self.onnotificationclose = (event) => {
 self.addEventListener('push', (event) => {
   console.log('Push notification received', event)
 
-let data = {title: 'New', content: 'Something new posted'}
+  let data = { title: 'New', content: 'Something new posted' }
 
-  if(event.data){
+  if (event.data) {
     data = JSON.parse(event.data.text())
 
-    const options ={
+    const options = {
       body: data.content,
       icon: './icons/icon-192x192.png',
     }

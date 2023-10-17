@@ -308,9 +308,9 @@ export default defineComponent({
       if (!pushSubscription) {
         console.log('creating a new sub')
         // create a subscription
-        const vapidPublicKey = 'BPxo9CzMW4jUhjJYY0y742s0vQxdFBlEw6Td-Ro2CpXlLKCx87BCl9tBXSAtNDCDG6MTA5Y0eHutmbc9FbJpXjA';
+        // const vapidPublicKey = 'BPxo9CzMW4jUhjJYY0y742s0vQxdFBlEw6Td-Ro2CpXlLKCx87BCl9tBXSAtNDCDG6MTA5Y0eHutmbc9FbJpXjA';
+        const vapidPublicKey = 'BEAJ_rG_ULITC2ONy_sanBMIfCtQAwcFL68aX9ein0EKUBBAVqnaRmDvq3GCX88ZBJxmsBHjbvnRSUoxQLqMiA8';
         const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey)
-        // write a function named urlBase64ToUint8Array to convert the vapidPublicKey to a Uint8Array
         newSubscription = await swRegistration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: convertedVapidPublicKey
