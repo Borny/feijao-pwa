@@ -14,6 +14,7 @@ const fr = {
   PORTUGUESE: "Portugais",
   SETTINGS: "Paramètres",
   INSTALL_APP: "Installer l'application",
+  ENABLE_NOTIFICATION: "Activer les notifications",
   ADMIN: "Admin",
   WHICH_TITLE_WOULD_BE_BEST: "Quel titre serait le meilleur ?",
   COMMENT_ADDED: "Commentaire ajouté",

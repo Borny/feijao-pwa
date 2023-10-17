@@ -28,3 +28,43 @@ cleanupOutdatedCaches()
 //     )
 //   )
 // }
+
+// Notification
+// self.addEventListener('notificationclick',  (event)=> {
+//   console.log('notification', event)
+//   console.log('notification', event.notification )
+//   console.log('notification', event.action )
+// })
+
+// self.addEventListener('notificationclose',  (event)=> {
+//   console.log('notification was closed', event)
+// })
+
+
+//Inside a service worker.
+self.onnotificationclick = (event) => {
+  console.log("On notification click: ", event.notification.tag);
+};
+self.onnotificationclose = (event) => {
+  console.log("On notification close: ", event.notification.tag);
+};
+
+// PUSH
+self.addEventListener('push', (event) => {
+  console.log('Push notification received', event)
+
+let data = {title: 'New', content: 'Something new posted'}
+
+  if(event.data){
+    data = JSON.parse(event.data.text())
+
+    const options ={
+      body: data.content,
+      icon: './icons/icon-192x192.png',
+    }
+
+    event.waitUntil(
+      self.registration.showNotification(data.title, options)
+    )
+  }
+})

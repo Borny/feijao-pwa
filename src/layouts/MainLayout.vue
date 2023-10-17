@@ -41,7 +41,14 @@
               </q-item>
               <q-item v-if="displayInstallApp">
                 <q-item-section>
-                  <q-btn size="sm" icon="install_mobile" flat text-color="accent" @click="onInstallApp" :label="$t('INSTALL_APP')" />
+                  <q-btn size="sm" icon="install_mobile" flat text-color="accent" @click="onInstallApp"
+                    :label="$t('INSTALL_APP')" />
+                </q-item-section>
+              </q-item>
+              <q-item v-if="displayNotificationPermission && displayTristan">
+                <q-item-section>
+                  <q-btn size="sm" icon="notifications" flat text-color="accent" @click="onRequestNotificationPermission"
+                    :label="$t('ENABLE_NOTIFICATION')" />
                 </q-item-section>
               </q-item>
               <q-item>
@@ -53,6 +60,9 @@
             </q-list>
           </q-menu>
         </q-btn>
+
+        <q-btn v-if="displayNotificationPermission && displayTristan" size="sm" icon="notifications" flat
+          text-color="accent" @click="onRequestNotificationPermission" :label="$t('ENABLE_NOTIFICATION')" />
       </q-toolbar>
     </q-header>
 
@@ -103,12 +113,13 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, onUpdated, computed } from "vue";
+import { defineComponent, ref, reactive, onMounted, onUpdated, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from "../stores/auth/auth";
 import useHomeStore from "../stores/home/home";
+import { configure } from 'quasar/wrappers';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -121,6 +132,7 @@ export default defineComponent({
     const homeStore = useHomeStore();
     const leftDrawerOpen = false
     const displayInstallApp = ref(homeStore.displayInstallApp)
+    const displayNotificationPermission = ref(homeStore.displayEnableNotification)
     const isMainLayoutLoaded = ref(false);
     const user = ref({});
     const showArrowBack = ref(false);
@@ -134,6 +146,9 @@ export default defineComponent({
         && newPassword.value === confirmedPassword.value
         || (!newPassword.value.length && !confirmedPassword.value.length)
     });
+
+    // TODO: delete
+    const displayTristan = computed(() => user.value.name === 'tristan')
 
     const { locale } = useI18n({ useScope: 'global' })
 
@@ -241,8 +256,94 @@ export default defineComponent({
       homeStore.deferredPrompt.prompt()
     }
 
+    async function displayConfirmationNotification() {
+      if ('serviceWorker' in navigator) {
+        const swRegistration = await navigator.serviceWorker.ready
+        swRegistration.showNotification('Successfully subscribed!', {
+          body: 'You successfully subscribed to our Notification Service',
+          icon: './icons/icon-192x192.png',
+          // image: './kalalau-beach.2009ff86.jpg',
+          dir: 'ltr',
+          lang: 'en-US',
+          vibrate: [100, 50, 200], // vibration / pause / vibration / pause / .....
+          badge: './icons/icon-192x192.png',
+          tag: 'confirm-notification', // if set will stack the notifications, they won't show
+          renotify: true,
+          data: {
+            dateOfArrival: Date.now(),
+            primaryKey: 1
+          },
+          actions: [
+            { action: 'confirm', title: 'Okay', icon: '/icon-192x192.png' },
+            { action: 'cancel', title: 'Cancel', icon: '/icon-192x192.png' }
+          ]
+        })
+      }
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      var padding = '='.repeat((4 - base64String.length % 4) % 4);
+      var base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+      var rawData = window.atob(base64);
+      var outputArray = new Uint8Array(rawData.length);
+
+      for (var i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function configurePushSub() {
+      if (!('serviceWorker' in navigator)) {
+        return
+      }
+
+      const swRegistration = await navigator.serviceWorker.ready
+      const pushSubscription = await swRegistration.pushManager.getSubscription()
+      let newSubscription
+      console.log({ pushSubscription })
+      if (!pushSubscription) {
+        console.log('creating a new sub')
+        // create a subscription
+        const vapidPublicKey = 'BPxo9CzMW4jUhjJYY0y742s0vQxdFBlEw6Td-Ro2CpXlLKCx87BCl9tBXSAtNDCDG6MTA5Y0eHutmbc9FbJpXjA';
+        const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey)
+        // write a function named urlBase64ToUint8Array to convert the vapidPublicKey to a Uint8Array
+        newSubscription = await swRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidPublicKey
+        })
+      } else {
+        // we have a subscription
+      }
+
+      if (newSubscription) {
+        try {
+          const subscriptionResponse = await homeStore.storeSubscription(newSubscription)
+          if (subscriptionResponse) {
+            displayConfirmationNotification()
+          }
+        } catch (error) {
+        }
+      }
+    }
+
+    async function onRequestNotificationPermission() {
+      const permissionRequest = await Notification.requestPermission()
+      if (permissionRequest === 'granted') {
+        // homeStore.setNotificationPermissionDisplay(false)
+        // displayConfirmationNotification()
+        configurePushSub()
+      } else {
+        console.log('Unable to get permission to notify.');
+      }
+    }
+
     homeStore.$subscribe((mutation, state) => {
       displayInstallApp.value = state.displayInstallApp
+      displayNotificationPermission.value = state.displayEnableNotification
     })
 
     return {
@@ -254,7 +355,10 @@ export default defineComponent({
       onOpenSettings,
       onUpdateSettings,
       onInstallApp,
+      onRequestNotificationPermission,
       logout,
+
+      displayTristan,
 
       getName,
 
@@ -267,6 +371,7 @@ export default defineComponent({
       displaySettings,
       isUpdateValidated,
       displayInstallApp,
+      displayNotificationPermission,
     };
   }
 })

@@ -7,6 +7,7 @@ const useHomeStore = defineStore('home', {
     info: null,
     deferredPrompt: null,
     displayInstallApp: null,
+    displayEnableNotification: null,
   }),
   getters,
   actions

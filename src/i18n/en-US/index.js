@@ -14,6 +14,7 @@ const en = {
   PORTUGUESE: "Portuguese",
   SETTINGS: "Settings",
   INSTALL_APP: "Install the app",
+  ENABLE_NOTIFICATION: "Enable notifications",
   ADMIN: "Admin",
   WHICH_TITLE_WOULD_BE_BEST: "Which title would be best ?",
   COMMENT_ADDED: "Comment added",

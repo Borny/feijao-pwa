@@ -41,7 +41,7 @@ export default defineComponent({
       homeStore.setDeferredPrompt(null)
     })
 
-    // PWA related
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
@@ -49,6 +49,11 @@ export default defineComponent({
       // Stash the event so it can be triggered later.
       homeStore.setDeferredPrompt(e)
     })
+
+    // Notification
+    if('Notification' in window) {
+      homeStore.setNotificationPermissionDisplay(true)
+    }
   }
 })
 </script>

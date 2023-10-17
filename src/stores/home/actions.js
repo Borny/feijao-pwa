@@ -27,6 +27,19 @@ export default {
     }
   },
 
+  async storeSubscription(newSubscription) {
+
+    const response = await api.post(`/subscription`, { newSubscription })
+
+    if (!response) {
+      return 'Adding subscription failed'
+    }
+
+    if ((response.status === 201)) {
+      return response.data;
+    }
+  },
+
   // PWA
   setDeferredPrompt(value) {
     this.$patch({ deferredPrompt: value })
@@ -35,4 +48,8 @@ export default {
   setInstallAppDisplay(value) {
     this.$patch({ displayInstallApp: value })
   },
+
+  setNotificationPermissionDisplay(value) {
+    this.$patch({ displayEnableNotification: value })
+  }
 }
