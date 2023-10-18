@@ -13,8 +13,8 @@ const { configure } = require('quasar/wrappers');
 const path = require('node:path')
 
 const API_DEV = 'http://localhost:7000/api/'
-const API_PROD = 'https://feijao-api.onrender.com/api/'
-// const API_PROD = 'https://wild-elk-coveralls.cyclic.app/api/'
+// const API_PROD = 'https://feijao-api.onrender.com/api/'
+const API_PROD = 'http://ec2-3-76-207-240.eu-central-1.compute.amazonaws.com:7000/api'
 
 module.exports = configure(function (ctx) {
   return {
