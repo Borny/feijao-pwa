@@ -97,10 +97,12 @@ self.addEventListener('push', (event) => {
           });
 
           if(client !== undefined) {
-            client.navigate(`feijao-pwa/#/${notification.data.url}`);
+            // client.navigate(`feijao-pwa/#/${notification.data.url}`);
+            client.navigate(`${notification.data.url}`);
             client.focus();
           } else {
-            client.navigate(`feijao-pwa/#/${notification.data.url}`);
+            // client.navigate(`feijao-pwa/#/${notification.data.url}`);
+            client.navigate(`${notification.data.url}`);
           }
           notification.close();
         })
