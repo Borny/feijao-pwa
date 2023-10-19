@@ -83,19 +83,24 @@ self.addEventListener('push', (event) => {
     if(action === 'confirm') {
       notification.close();
     } else{
+
+
+      if(notification.data.url === undefined) {
+        notification.close();
+        return;
+      }
+
       event.waitUntil(
         clients.matchAll().then((clis) => {
           const client = clis.find((c) => {
             return c.visibilityState === 'visible';
           });
 
-          console.log({ client })
-
           if(client !== undefined) {
-            client.navigate(`/#/${notification.data.url}`);
+            client.navigate(`feijao-pwa/#/${notification.data.url}`);
             client.focus();
           } else {
-            client.navigate(`/#/${notification.data.url}`);
+            client.navigate(`feijao-pwa/#/${notification.data.url}`);
           }
           notification.close();
         })
