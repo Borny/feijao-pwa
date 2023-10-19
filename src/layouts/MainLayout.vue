@@ -60,9 +60,6 @@
             </q-list>
           </q-menu>
         </q-btn>
-
-        <q-btn v-if="displayNotificationPermission && displayTristan" size="sm" icon="notifications" flat
-          text-color="accent" @click="onRequestNotificationPermission" :label="$t('ENABLE_NOTIFICATION')" />
       </q-toolbar>
     </q-header>
 
@@ -256,31 +253,6 @@ export default defineComponent({
       homeStore.deferredPrompt.prompt()
     }
 
-    async function displayConfirmationNotification() {
-      if ('serviceWorker' in navigator) {
-        const swRegistration = await navigator.serviceWorker.ready
-        swRegistration.showNotification('Successfully subscribed!', {
-          body: 'You successfully subscribed to our Notification Service',
-          icon: './icons/icon-192x192.png',
-          // image: './kalalau-beach.2009ff86.jpg',
-          dir: 'ltr',
-          lang: 'en-US',
-          vibrate: [100, 50, 200], // vibration / pause / vibration / pause / .....
-          badge: './icons/icon-192x192.png',
-          tag: 'confirm-notification', // if set will stack the notifications, they won't show
-          renotify: true,
-          data: {
-            dateOfArrival: Date.now(),
-            primaryKey: 1
-          },
-          actions: [
-            { action: 'confirm', title: 'Okay', icon: '/icon-192x192.png' },
-            { action: 'cancel', title: 'Cancel', icon: '/icon-192x192.png' }
-          ]
-        })
-      }
-    }
-
     function urlBase64ToUint8Array(base64String) {
       var padding = '='.repeat((4 - base64String.length % 4) % 4);
       var base64 = (base64String + padding)
@@ -304,11 +276,9 @@ export default defineComponent({
       const swRegistration = await navigator.serviceWorker.ready
       const pushSubscription = await swRegistration.pushManager.getSubscription()
       let newSubscription
-      console.log({ pushSubscription })
       if (!pushSubscription) {
         console.log('creating a new sub')
-        // create a subscription
-        // const vapidPublicKey = 'BPxo9CzMW4jUhjJYY0y742s0vQxdFBlEw6Td-Ro2CpXlLKCx87BCl9tBXSAtNDCDG6MTA5Y0eHutmbc9FbJpXjA';
+
         const vapidPublicKey = 'BEAJ_rG_ULITC2ONy_sanBMIfCtQAwcFL68aX9ein0EKUBBAVqnaRmDvq3GCX88ZBJxmsBHjbvnRSUoxQLqMiA8';
         const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey)
         newSubscription = await swRegistration.pushManager.subscribe({
@@ -321,10 +291,7 @@ export default defineComponent({
 
       if (newSubscription) {
         try {
-          const subscriptionResponse = await homeStore.storeSubscription(newSubscription)
-          if (subscriptionResponse) {
-            displayConfirmationNotification()
-          }
+          await homeStore.storeSubscription(newSubscription)
         } catch (error) {
         }
       }
@@ -333,8 +300,7 @@ export default defineComponent({
     async function onRequestNotificationPermission() {
       const permissionRequest = await Notification.requestPermission()
       if (permissionRequest === 'granted') {
-        // homeStore.setNotificationPermissionDisplay(false)
-        // displayConfirmationNotification()
+        homeStore.setNotificationPermissionDisplay(false)
         configurePushSub()
       } else {
         console.log('Unable to get permission to notify.');

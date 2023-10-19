@@ -40,31 +40,70 @@ cleanupOutdatedCaches()
 //   console.log('notification was closed', event)
 // })
 
-
-//Inside a service worker.
-self.onnotificationclick = (event) => {
-  console.log("On notification click: ", event.notification.tag);
-};
-self.onnotificationclose = (event) => {
-  console.log("On notification close: ", event.notification.tag);
-};
-
 // PUSH
 self.addEventListener('push', (event) => {
-  console.log('Push notification received', event)
-
   let data = { title: 'New', content: 'Something new posted' }
-
-  if (event.data) {
+  if (event && event.data) {
     data = JSON.parse(event.data.text())
 
     const options = {
-      body: data.content,
+      body: data.body,
       icon: './icons/icon-192x192.png',
+      // image: './kalalau-beach.2009ff86.jpg',
+      dir: 'ltr',
+      lang: 'en-US',
+      vibrate: [100, 50, 200],
+      badge: './icons/icon-192x192.png',
+      tag: 'confirm-notification', // if set will stack the notifications, they won't show
+      renotify: true,
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: 1,
+        url: data.openUrl,
+      },
+    }
+
+    if (data.actions) {
+      options.actions = [
+        { action: 'confirm', title: data.actions.confirm.title, icon: data.actions.confirm.icon },
+        // { action: 'cancel', title: data.actions.cancel.title, icon: data.actions.confirm.icon }
+      ]
     }
 
     event.waitUntil(
       self.registration.showNotification(data.title, options)
     )
   }
+
+  //Inside a service worker.
+  self.onnotificationclick = (event) => {
+    const notification = event.notification;
+    const action = event.action;
+
+    if(action === 'confirm') {
+      notification.close();
+    } else{
+      event.waitUntil(
+        clients.matchAll().then((clis) => {
+          const client = clis.find((c) => {
+            return c.visibilityState === 'visible';
+          });
+
+          console.log({ client })
+
+          if(client !== undefined) {
+            client.navigate(`/#/${notification.data.url}`);
+            client.focus();
+          } else {
+            client.navigate(`/#/${notification.data.url}`);
+          }
+          notification.close();
+        })
+      );
+    }
+  };
+
+  self.onnotificationclose = (event) => {
+    console.log("On notification close: ", event.notification.tag);
+  };
 })
