@@ -27,9 +27,8 @@ export default {
     }
   },
 
-  async storeSubscription(newSubscription) {
-
-    const response = await api.post(`/subscription`, { newSubscription })
+  async storeSubscription(newSubscription, userId) {
+    const response = await api.post(`/subscription`, { newSubscription, userId })
 
     if (!response) {
       return 'Adding subscription failed'

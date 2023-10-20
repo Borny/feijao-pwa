@@ -60,6 +60,7 @@ self.addEventListener('push', (event) => {
         dateOfArrival: Date.now(),
         primaryKey: 1,
         url: data.openUrl,
+        pictureId: data.pictureId,
       },
     }
 
@@ -75,40 +76,83 @@ self.addEventListener('push', (event) => {
     )
   }
 
-  //Inside a service worker.
   self.onnotificationclick = (event) => {
     const notification = event.notification;
     const action = event.action;
 
-    if(action === 'confirm') {
+    if (!notification.data.url) {
       notification.close();
-    } else{
-
-
-      if(notification.data.url === undefined) {
-        notification.close();
-        return;
-      }
-
-      event.waitUntil(
-        clients.matchAll().then((clis) => {
-          const client = clis.find((c) => {
-            return c.visibilityState === 'visible';
-          });
-
-          if(client !== undefined) {
-            // client.navigate(`feijao-pwa/#/${notification.data.url}`);
-            client.navigate(`${notification.data.url}`);
-            client.focus();
-          } else {
-            // client.navigate(`feijao-pwa/#/${notification.data.url}`);
-            client.navigate(`${notification.data.url}`);
-          }
-          notification.close();
-        })
-      );
+      return;
     }
-  };
+
+    console.log({ action })
+
+    // if (action === 'confirm') {
+    //   notification.close();
+    //   return;
+    // } else {
+
+    console.log('notification.data.url', notification.data.url)
+    // console.log('notification.data.url', notification.data.pictureId)
+    const urlToCheck = new URL(`https://borny.github.io/feijao-pwa/`, self.location.origin).href;
+    // const urlToCheck = new URL(`http://localhost:9200/feijao-pwa/`, self.location.origin).href;
+    const urlToOpen = new URL(`https://borny.github.io/feijao-pwa/#/picture/${notification.data.url}`, self.location.origin).href;
+    // const urlToOpen = new URL(`http://localhost:9200/feijao-pwa/#/picture/${notification.data.url}`, self.location.origin).href;
+
+    const promiseChain = clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    })
+      .then((windowClients) => {
+        let matchingClient = null;
+
+        for (let i = 0; i < windowClients.length; i++) {
+          const windowClient = windowClients[i];
+          console.log('BEFORE IF', windowClient.url, urlToCheck)
+          console.log('BEFORE IF', windowClient.url.includes(urlToCheck))
+          // if (windowClient.url === urlToOpen) {
+          if (windowClient.url.includes(urlToCheck)) {
+            matchingClient = windowClient;
+            break;
+          }
+        }
+
+        if (matchingClient) {
+          console.log({ matchingClient })
+          matchingClient.navigate(urlToOpen)
+          return matchingClient.focus();
+        } else {
+          console.log('not matchingClient')
+          return clients.openWindow(urlToOpen);
+        }
+      });
+
+    notification.close();
+
+    event.waitUntil(promiseChain);
+
+    // event.waitUntil(
+
+    //   clients.matchAll().then((clis) => {
+    //     console.log({ clis })
+    //     const client = clis.find((c) => {
+    //       return c.visibilityState === 'visible';
+    //     });
+
+    //     if (client !== undefined) {
+    //       // client.navigate(`feijao-pwa/#/${notification.data.url}`);
+    //       client.navigate(`feijao-pwa/#/${notification.data.url}`);
+    //       // client.navigate(`${notification.data.url}`);
+    //       client.focus();
+    //     } else {
+    //       client.openWindow(`feijao-pwa/#/${notification.data.url}`);
+    //       // client.openWindow(`${notification.data.url}`);
+    //     }
+    //     notification.close();
+    //   })
+    // );
+  }
+  // };
 
   self.onnotificationclose = (event) => {
     console.log("On notification close: ", event.notification.tag);

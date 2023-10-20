@@ -51,8 +51,9 @@ export default defineComponent({
     })
 
     // Notification
-    if('Notification' in window) {
-      homeStore.setNotificationPermissionDisplay(true)
+    if ('Notification' in window) {
+      const notificationPrermission = Notification.permission === 'granted'
+      homeStore.setNotificationPermissionDisplay(!notificationPrermission)
     }
   }
 })

@@ -45,7 +45,7 @@
                     :label="$t('INSTALL_APP')" />
                 </q-item-section>
               </q-item>
-              <q-item v-if="displayNotificationPermission && displayTristan">
+              <q-item v-if="displayNotificationPermission">
                 <q-item-section>
                   <q-btn size="sm" icon="notifications" flat text-color="accent" @click="onRequestNotificationPermission"
                     :label="$t('ENABLE_NOTIFICATION')" />
@@ -143,9 +143,6 @@ export default defineComponent({
         && newPassword.value === confirmedPassword.value
         || (!newPassword.value.length && !confirmedPassword.value.length)
     });
-
-    // TODO: delete
-    const displayTristan = computed(() => user.value.name === 'tristan')
 
     const { locale } = useI18n({ useScope: 'global' })
 
@@ -277,8 +274,6 @@ export default defineComponent({
       const pushSubscription = await swRegistration.pushManager.getSubscription()
       let newSubscription
       if (!pushSubscription) {
-        console.log('creating a new sub')
-
         const vapidPublicKey = 'BEAJ_rG_ULITC2ONy_sanBMIfCtQAwcFL68aX9ein0EKUBBAVqnaRmDvq3GCX88ZBJxmsBHjbvnRSUoxQLqMiA8';
         const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey)
         newSubscription = await swRegistration.pushManager.subscribe({
@@ -291,8 +286,9 @@ export default defineComponent({
 
       if (newSubscription) {
         try {
-          await homeStore.storeSubscription(newSubscription)
+          await homeStore.storeSubscription(newSubscription, user.value.id)
         } catch (error) {
+          console.error(error, 'Counldnt store the subscription')
         }
       }
     }
@@ -323,8 +319,6 @@ export default defineComponent({
       onInstallApp,
       onRequestNotificationPermission,
       logout,
-
-      displayTristan,
 
       getName,
 
