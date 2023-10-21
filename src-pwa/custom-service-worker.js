@@ -94,10 +94,14 @@ self.addEventListener('push', (event) => {
 
     console.log('notification.data.url', notification.data.url)
     // console.log('notification.data.url', notification.data.pictureId)
-    const urlToCheck = new URL(`https://borny.github.io/feijao-pwa/`, self.location.origin).href;
+
+    // DEV
     // const urlToCheck = new URL(`http://localhost:9200/feijao-pwa/`, self.location.origin).href;
-    const urlToOpen = new URL(`https://borny.github.io/feijao-pwa/#/picture/${notification.data.url}`, self.location.origin).href;
     // const urlToOpen = new URL(`http://localhost:9200/feijao-pwa/#/picture/${notification.data.url}`, self.location.origin).href;
+
+    // PROD
+    const urlToOpen = new URL(`https://borny.github.io/feijao-pwa/#/picture/${notification.data.url}`, self.location.origin).href;
+    const urlToCheck = new URL(`https://borny.github.io/feijao-pwa/`, self.location.origin).href;
 
     const promiseChain = clients.matchAll({
       type: 'window',
