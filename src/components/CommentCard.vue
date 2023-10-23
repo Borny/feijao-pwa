@@ -4,7 +4,7 @@
     <q-card-section class="col q-py-sm">
       <p :class="user.id === comment.user_id ? 'text-secondary' : 'text-primary'" class="text-capitalize">
         <small>
-          {{ user.id === comment.user_id ? $t('YOU') : comment.name }}
+          {{ user.id === comment.user_id ? $t('YOU') : comment.nickname ? comment.nickname : comment.name }}
         </small>
       </p>
       <p class="q-ml-md" :class="user.id === comment.user_id ? 'text-primary' : 'text-accent'">
@@ -15,8 +15,6 @@
       <q-btn v-if="user.id === comment.user_id" @click="openDeleteCommentDialog = true" flat round color="primary"
         icon="delete" />
     </q-card-section>
-
-    <!-- <div id="table" /> -->
 
     <q-dialog v-model="openDeleteCommentDialog" class="dialog--comment">
       <q-card>
@@ -56,12 +54,8 @@ export default defineComponent({
       `${new Date(props.comment.updated_at).getDate()}-${new Date(props.comment.updated_at).getMonth()}-${new Date(props.comment.updated_at).getYear()}`
       : null);
 
-    // const el = document.querySelector("#table")
-
     function init() {
       user.value = authStore.user
-      // console.log('el', el);
-      // console.log('tale', table.value);
     }
 
     function onDeleteComment() {
