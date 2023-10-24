@@ -46,10 +46,12 @@ self.addEventListener('push', (event) => {
   if (event && event.data) {
     data = JSON.parse(event.data.text())
 
+    console.log('data', data)
+    console.log('pic', `https://feijao-app.s3.eu-central-1.amazonaws.com/${data.pictureUrl}`)
+
     const options = {
       body: data.body,
       icon: './icons/icon-192x192.png',
-      // image: './kalalau-beach.2009ff86.jpg',
       dir: 'ltr',
       lang: 'en-US',
       vibrate: [100, 50, 200],
@@ -62,6 +64,10 @@ self.addEventListener('push', (event) => {
         url: data.openUrl,
         pictureId: data.pictureId,
       },
+    }
+
+    if (data.pictureUrl) {
+      options.image = `https://feijao-app.s3.eu-central-1.amazonaws.com/${data.pictureUrl}`
     }
 
     if (data.actions) {
@@ -92,7 +98,7 @@ self.addEventListener('push', (event) => {
     //   return;
     // } else {
 
-    console.log('notification.data.url', notification.data.url)
+    console.log('notification.data.url', notification)
     // console.log('notification.data.url', notification.data.pictureId)
 
     // DEV
@@ -103,12 +109,16 @@ self.addEventListener('push', (event) => {
     const urlToOpen = new URL(`https://borny.github.io/feijao-pwa/#/picture/${notification.data.url}`, self.location.origin).href;
     const urlToCheck = new URL(`https://borny.github.io/feijao-pwa/`, self.location.origin).href;
 
+    notification.close();
+
     const promiseChain = clients.matchAll({
       type: 'window',
       includeUncontrolled: true
     })
       .then((windowClients) => {
         let matchingClient = null;
+
+        console.log('inside chain')
 
         for (let i = 0; i < windowClients.length; i++) {
           const windowClient = windowClients[i];
@@ -130,8 +140,6 @@ self.addEventListener('push', (event) => {
           return clients.openWindow(urlToOpen);
         }
       });
-
-    notification.close();
 
     event.waitUntil(promiseChain);
 
