@@ -87,7 +87,7 @@ export default defineComponent({
     const { getScrollTarget, setVerticalScrollPosition } = scroll
 
     const formatDate = computed(() => {
-      const date = new Date(picture.value.created_at)
+      const date = new Date(picture.value.date)
       return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric', year: 'numeric', })
     });
 
