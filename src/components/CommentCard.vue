@@ -11,9 +11,9 @@
         {{ comment.comment }}
       </p>
 
-      <q-btn @click="onToggleLikeComment" dense color="purple" round icon="thumb_up" class="q-ml-md">
+      <!-- <q-btn @click="onToggleLikeComment" dense color="purple" round icon="thumb_up" class="q-ml-md">
         <q-badge color="primary" floating>9 {{ comment.likeCount }}</q-badge>
-      </q-btn>
+      </q-btn> -->
     </q-card-section>
     <q-card-section class="q-py-sm">
       <q-btn v-if="user.id === comment.user_id" @click="openDeleteCommentDialog = true" flat round color="primary"
