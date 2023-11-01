@@ -10,6 +10,10 @@
       <p class="q-ml-md" :class="user.id === comment.user_id ? 'text-primary' : 'text-accent'">
         {{ comment.comment }}
       </p>
+
+      <q-btn @click="onToggleLikeComment" dense color="purple" round icon="thumb_up" class="q-ml-md">
+        <q-badge color="primary" floating>9 {{ comment.likeCount }}</q-badge>
+      </q-btn>
     </q-card-section>
     <q-card-section class="q-py-sm">
       <q-btn v-if="user.id === comment.user_id" @click="openDeleteCommentDialog = true" flat round color="primary"
@@ -45,7 +49,7 @@ export default defineComponent({
     },
   },
 
-  emits: ['deleteComment'],
+  emits: ['deleteComment', 'toggleLikeComment'],
 
   setup(props, { emit }) {
     const authStore = useAuthStore();
@@ -62,10 +66,16 @@ export default defineComponent({
       emit("deleteComment", props.comment.id);
     }
 
+    function onToggleLikeComment() {
+      // comment.likeCount = comment.likeCount + 1;
+       emit("toggleLikeComment", props.comment.id);
+    }
+
     onMounted(async () => init());
 
     return {
       onDeleteComment,
+      onToggleLikeComment,
       openDeleteCommentDialog: ref(false),
       user,
       formatDate,

@@ -5,7 +5,7 @@
     </div>
     <transition>
       <div v-if="!isLoading && picture" class="container">
-        <q-card class="card--picture">
+        <div class="card--picture column justify-center">
           <q-img class="image" :src="`https://feijao-app.s3.eu-central-1.amazonaws.com/${picture.url}`">
             <div class="image__label">
               {{ picture.location }}
@@ -13,7 +13,16 @@
               {{ formatDate }}
             </div>
           </q-img>
-        </q-card>
+        </div>
+        <!-- <q-card class="card--picture">
+          <q-img class="image" :src="`https://feijao-app.s3.eu-central-1.amazonaws.com/${picture.url}`">
+            <div class="image__label">
+              {{ picture.location }}
+              <br>
+              {{ formatDate }}
+            </div>
+          </q-img>
+        </q-card> -->
 
         <!-- COMMENTS -->
         <div class="card--comment no-wrap column">
@@ -258,8 +267,11 @@ export default defineComponent({
 }
 
 .card--picture {
-  height: 80vh;
+  // height: 80vh;
+  overflow: visible;
+  border-radius: 4px;
   position: relative;
+  background: $primary;
 
   @include screen-sm {
     width: 50%;
@@ -267,9 +279,12 @@ export default defineComponent({
   }
 
   .image {
+    overflow: visible;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
     width: 100%;
     max-width: 100%;
-    height: 100%;
+    // height: 100%;
 
     @media (min-width: $screen-xs) {
       width: 900px;
@@ -281,8 +296,8 @@ export default defineComponent({
     background: $primary;
     transform: rotate(-12deg);
     position: absolute;
-    bottom: 30px;
-    right: 20px;
+    bottom: 0px;
+    right: 0px;
     text-align: center;
     font-family: $fontCaveat;
     color: $info;
