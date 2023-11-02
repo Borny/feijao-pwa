@@ -117,7 +117,8 @@ export default defineComponent({
         if (response) {
           quasar.notify({
             type: 'positive',
-            message: `${selectedGift.value.state !== 'free' ? `${i18n.t('GIFT_BOOKED')}` : `${i18n.t('BOOKING_CANCELLED')}`}`
+            message: `${selectedGift.value.state !== 'free' ? `${i18n.t('GIFT_BOOKED')}` : `${i18n.t('BOOKING_CANCELLED')}`}`,
+            badgeColor: 'accent',
           })
           if (selectedGift.value.state !== 'free') {
             displayThanksDialog.value = true;

@@ -172,6 +172,7 @@ export default defineComponent({
         quasar.notify({
           type: 'positive',
           message: `${i18n.t('COMMENT_ADDED')}`,
+          badgeColor: 'accent',
         })
 
       } catch (error) {
@@ -191,6 +192,7 @@ export default defineComponent({
         quasar.notify({
           type: 'positive',
           message: `${i18n.t('COMMENT_DELETED')}`,
+          badgeColor: 'accent',
 
         })
 

@@ -8,7 +8,12 @@
         </small>
       </p>
       <p class="q-ml-md text-center" :class="user.id === bet.user_id ? 'text-primary' : 'text-accent'">
-        <span class="text-capitalize">{{ bet.gender }}</span> - {{ bet.height }} - {{ bet.weight }}
+        <span class="text-capitalize">
+          <q-icon :name="getIcon" size="2em" :color="getIconColor" />
+        </span>
+        <br>
+        <q-icon name="height" color="primary" size="1.5rem" class="q-mr-sm" />{{ bet.height }}
+        <q-icon name="fitness_center" color="primary" size="1.5rem" class="q-mr-sm q-ml-md" />{{ bet.weight }}
         <br>
         {{ bet.extra }}
       </p>
@@ -20,7 +25,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'BetCardComponent',
@@ -39,12 +44,47 @@ export default defineComponent({
   emits: ['udpateBet'],
 
   setup(props, { emit }) {
+    const getIcon = computed(() => {
+      // write a switch case to return the correct icon
+      switch (props.bet.gender) {
+        case 'male':
+          return 'male'
+          break;
+        case 'female':
+          return 'female'
+          break;
+        case 'other':
+          return 'transgender'
+          break;
+        default:
+          return ''
+      }
+    })
+    const getIconColor = computed(() => {
+      // write a switch case to return the correct icon
+      switch (props.bet.gender) {
+        case 'male':
+          return 'info'
+          break;
+        case 'female':
+          return 'primary'
+          break;
+        case 'other':
+          return 'warning'
+          break;
+        default:
+          return ''
+      }
+    })
+
     function onUpdateBet() {
       emit("udpateBet", { mode: 'update', bet: props.bet });
     }
 
     return {
       onUpdateBet,
+      getIcon,
+      getIconColor,
     }
   },
 })

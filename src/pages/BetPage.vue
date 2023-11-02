@@ -6,11 +6,11 @@
           <q-card class="col-1-md card bg-grey-lighter padding-none">
             <q-card-section class="bg-accent">
               <p class="text-center">
-                {{$t('THE_BEST_ARE_OPEN')}}
+                {{ $t('THE_BEST_ARE_OPEN') }}
                 <br>
-                {{$t('YOU_CAN_CHANGE_THEM_AT_ANY_TIME')}}
+                {{ $t('YOU_CAN_CHANGE_THEM_AT_ANY_TIME') }}
                 <br>
-                {{$t('SURPRISE_PREPARATION')}}
+                {{ $t('SURPRISE_PREPARATION') }}
               </p>
             </q-card-section>
           </q-card>
@@ -21,8 +21,8 @@
               <q-spinner-tail color="accent" size="2em" />
             </div>
             <div v-if="!bets.length && !loadingBets" class="no-bet q-mt-lg">
-              <p>{{$t('NO_BETS_YET')}}</p>
-              <p>{{$t('BE_THE_FIRST')}}</p>
+              <p>{{ $t('NO_BETS_YET') }}</p>
+              <p>{{ $t('BE_THE_FIRST') }}</p>
             </div>
             <div v-if="bets.length && !loadingBets" class="bet__container">
               <bet-card v-for="(bet, idx) in bets" :key="idx" :bet="bet" :user="user"
@@ -41,13 +41,30 @@
             <!-- FORM -->
             <q-card-section class="">
               <form @submit.prevent="submit">
-                <div class="q-gutter-sm">
-                  <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
+                <div class="q-gutter-sm row justify-between">
+                  <q-btn icon="male" color="info" @click="gender = 'male'">
+                    <q-badge rounded v-if="gender === 'male'" color="dark" floating>
+                      <q-icon name="check" color="white" size="xs" />
+                    </q-badge>
+                  </q-btn>
+                  <q-btn icon="female" color="primary"
+                    @click="gender = 'female'">
+                    <q-badge v-if="gender === 'female'" rounded color="dark" floating>
+                      <q-icon name="check" color="white" size="xs" />
+                    </q-badge>
+                  </q-btn>
+                  <q-btn icon="transgender" color="warning"
+                    @click="gender = 'other'">
+                    <q-badge v-if="gender === 'other'" rounded color="dark" floating>
+                      <q-icon name="check" color="white" size="xs" />
+                    </q-badge>
+                  </q-btn>
+                  <!-- <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
                     val="male" :label="$t('MALE')" class="radio--input"/>
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
                     val="female" :label="$t('FEMALE')" class="radio--input"/>
                   <q-radio v-model="gender" color="accent" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                    val="other" :label="$t('OTHER')" class="radio--input"/>
+                    val="other" :label="$t('OTHER')" class="radio--input"/> -->
                 </div>
                 <q-input v-model="height" standout bg-color="accent" :placeholder="$t('HEIGHT')"
                   class="input__bet q-my-sm">
@@ -152,14 +169,15 @@ export default defineComponent({
         if (response) {
           quasar.notify({
             type: 'positive',
-            message: `${i18n.t('BET_DELETED')}`
+            message: `${i18n.t('BET_DELETED')}`,
+            badgeColor: 'accent',
           })
         }
       } catch (error) {
         if (response) {
           quasar.notify({
             type: 'negative',
-            message: `${i18n.t('FAILED_TO_DELETE_BET')}`
+            message: `${i18n.t('FAILED_TO_DELETE_BET')}`,
           })
         }
 
@@ -190,7 +208,8 @@ export default defineComponent({
           if (response) {
             quasar.notify({
               type: 'positive',
-              message: `${i18n.t('BET_ADDED')}`
+              message: `${i18n.t('BET_ADDED')}`,
+              badgeColor: 'accent',
             })
           }
         } else {
@@ -199,7 +218,8 @@ export default defineComponent({
           if (response) {
             quasar.notify({
               type: 'positive',
-              message: `${i18n.t('BET_UPDATED')}`
+              message: `${i18n.t('BET_UPDATED')}`,
+              badgeColor: 'accent',
             })
           }
         }
@@ -282,6 +302,10 @@ export default defineComponent({
   border-radius: 16px;
 }
 
+.q-badge--floating{
+  top: -10px;
+  right: -10px;
+}
 .card--bet {
   .no-bet {
     display: flex;
@@ -294,6 +318,7 @@ export default defineComponent({
     padding: 0 1rem;
     color: $info;
   }
+
 
   position: relative;
   width: 100%;
@@ -337,7 +362,7 @@ export default defineComponent({
   }
 }
 
-.radio--input{
+.radio--input {
   color: $primary;
 }
 </style>
